@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Events - NexusStream</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="dark-mode">
+    <!-- Reuse header from index.html -->
+    <header>
+        <!-- Copy the entire header section from index.html -->
+    </header>
+
+    <main class="adaptive-layout">
+        <section class="events-hub">
+            <h2>Events</h2>
+
+            <!-- Event Calendar -->
+            <div class="event-calendar">
+                <div class="calendar-header">
+                    <button class="prev-month"><i class="fas fa-chevron-left"></i></button>
+                    <h3>December 2023</h3>
+                    <button class="next-month"><i class="fas fa-chevron-right"></i></button>
+                </div>
+                <div class="calendar-grid">
+                    <!-- Calendar will be populated by JavaScript -->
+                </div>
+            </div>
+
+            <!-- Upcoming Events -->
+            <section class="upcoming-events">
+                <h3>Upcoming Events</h3>
+                <div class="event-list">
+                    <div class="event-card">
+                        <div class="event-date">
+                            <span class="day">15</span>
+                            <span class="month">DEC</span>
+                        </div>
+                        <div class="event-details">
+                            <h4>AI Technology Summit</h4>
+                            <p>Join industry leaders for the latest in AI innovations</p>
+                            <span class="time">2:00 PM EST</span>
+                            <span class="participants">1.2K interested</span>
+                        </div>
+                        <button class="register-btn">Register</button>
+                    </div>
+                    <!-- Add more event cards as needed -->
+                </div>
+            </section>
+
+            <!-- Featured Events -->
+            <section class="featured-events">
+                <h3>Featured Events</h3>
+                <div class="featured-grid">
+                    <div class="featured-event">
+                        <img src="./assets/event1.jpg" alt="Event Preview">
+                        <div class="event-overlay">
+                            <h4>Gaming Championship</h4>
+                            <p>December 20, 2023</p>
+                            <button class="register-btn">Learn More</button>
+                        </div>
+                    </div>
+                    <!-- Add more featured events as needed -->
+                </div>
+            </section>
+        </section>
+    </main>
+
+    <!-- Reuse footer from index.html -->
+    <footer class="ai-footer">
+        <!-- Copy the entire footer section from index.html -->
+    </footer>
+
+    <script src="./scripts.js"></script>
+    <script src="./ai-core.js"></script>
+    <script src="./calendar.js"></script>
+</body>
+</html>
