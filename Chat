@@ -1,0 +1,2495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>GVTech Hub Chat</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Chart.js Library for Analytics -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    
+    <style>
+        :root {
+            --primary: #7856FF;
+            --secondary: #2A2D3E;
+            --background: #1A1C23;
+            --text: #FFFFFF;
+            --hover-bg: rgba(255, 255, 255, 0.1);
+            --border-radius: 8px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: var(--background);
+            color: var(--text);
+            display: grid;
+            grid-template-columns: 70px 240px 1fr;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Server List Styles */
+        .server-list {
+            background: #141519;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            position: relative;
+        }
+
+        .server-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--secondary);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: border-radius 0.2s, background 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text);
+            font-size: 20px;
+        }
+
+        .server-icon:hover {
+            border-radius: 16px;
+            background: var(--primary);
+        }
+
+        /* Add Server Button */
+        .add-server {
+            width: 48px;
+            height: 48px;
+            background: var(--secondary);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: background 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text);
+            font-size: 20px;
+        }
+
+        .add-server:hover {
+            background: var(--primary);
+        }
+
+        /* Admin Trigger */
+        .admin-trigger {
+            width: 48px;
+            height: 48px;
+            background: var(--secondary);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: background 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text);
+            font-size: 20px;
+            position: absolute;
+            bottom: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .admin-trigger:hover {
+            background: var(--primary);
+        }
+
+        /* Channel List Styles */
+        .channel-list {
+            background: var(--secondary);
+            padding: 12px;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .category {
+            margin-bottom: 16px;
+        }
+
+        .category-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px;
+            cursor: pointer;
+            user-select: none;
+            border-radius: var(--border-radius);
+            transition: background 0.2s;
+        }
+
+        .category-header:hover {
+            background: var(--hover-bg);
+        }
+
+        .category-header i {
+            font-size: 12px;
+            transition: transform 0.3s;
+        }
+
+        .category-header.collapsed i {
+            transform: rotate(-90deg);
+        }
+
+        .channel-group {
+            margin-top: 4px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .category-header:not(.collapsed) + .channel-group {
+            max-height: 500px; /* Arbitrary large value for smooth expansion */
+        }
+
+        .channel-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 8px;
+            margin: 2px 0;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .channel-item:hover {
+            background: var(--hover-bg);
+        }
+
+        .channel-icon {
+            font-size: 16px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .channel-name {
+            flex: 1;
+        }
+
+        .notification-badge {
+            background: var(--primary);
+            color: white;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-size: 12px;
+        }
+
+        /* Chat Area Styles */
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        .chat-header {
+            padding: 12px;
+            background: var(--secondary);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .messages {
+            flex: 1;
+            padding: 16px;
+            overflow-y: auto;
+            background: var(--background);
+        }
+
+        .message {
+            margin: 8px 0;
+            padding: 8px;
+            border-radius: 4px;
+            background: rgba(255, 255, 255, 0.05);
+            position: relative;
+            transition: background 0.2s, border-left 0.2s;
+        }
+
+        .message:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Update Message Header Styles */
+        .message-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 4px;
+            position: relative;
+            padding-right: 32px; /* Make room for actions button */
+        }
+
+        .user-avatar {
+            margin-right: 4px;
+        }
+
+        .message-time {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.8em;
+            margin-left: auto;
+            margin-right: 8px; /* Add space between time and actions */
+        }
+
+        .message-actions {
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .message-input {
+            padding: 16px;
+            background: var(--secondary);
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .message-tools {
+            display: flex;
+            gap: 10px;
+        }
+
+        .tool-button {
+            background: none;
+            border: none;
+            color: var(--text);
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
+
+        .tool-button:hover {
+            background: var(--hover-bg);
+        }
+
+        .message-input input {
+            flex: 1;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 4px;
+            outline: none;
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text);
+        }
+
+        /* Admin Panel Styles */
+        .admin-panel {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--secondary);
+            border-radius: 8px;
+            padding: 20px;
+            z-index: 1000;
+            display: none;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .admin-panel.active {
+            display: block;
+        }
+
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .admin-header h3 {
+            font-size: 1.2em;
+        }
+
+        .admin-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 8px;
+            flex-wrap: wrap;
+        }
+
+        .tab-button {
+            background: none;
+            border: none;
+            color: var(--text);
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.2s;
+            flex: 1;
+            min-width: 100px;
+            justify-content: center;
+        }
+
+        .tab-button:hover {
+            background: var(--hover-bg);
+        }
+
+        .tab-button.active {
+            background: var(--primary);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Inventory Management Styles */
+        .inventory-header, .tickets-header, .analytics-header, .integrations-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .inventory-filters, .integrations-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .inventory-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 16px;
+            margin-top: 16px;
+        }
+
+        .inventory-card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 8px;
+            padding: 12px;
+            transition: border 0.2s;
+        }
+
+        .inventory-card.low-stock {
+            border: 1px solid #ff3b30;
+        }
+
+        .part-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .stock-bar {
+            height: 4px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 2px;
+            margin-bottom: 4px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stock-bar::before {
+            content: '';
+            display: block;
+            height: 100%;
+            width: var(--stock-level);
+            background: var(--primary);
+            border-radius: 2px;
+            transition: width 0.3s;
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .admin-button {
+            background: var(--primary);
+            border: none;
+            color: #fff;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.2s;
+            font-size: 0.9em;
+        }
+
+        .admin-button:hover {
+            background: #6e44d5;
+        }
+
+        .admin-button.small {
+            padding: 4px 8px;
+            font-size: 0.8em;
+        }
+
+        /* Ticket System Styles */
+        .tickets-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .ticket-card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 8px;
+            padding: 16px;
+            transition: border-left 0.2s;
+        }
+
+        .ticket-card.urgent {
+            border-left: 3px solid #ff3b30;
+        }
+
+        .ticket-progress {
+            margin-top: 8px;
+        }
+
+        .progress-bar {
+            height: 4px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 2px;
+            margin-bottom: 4px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-bar::before {
+            content: '';
+            display: block;
+            height: 100%;
+            width: var(--progress);
+            background: var(--primary);
+            border-radius: 2px;
+            transition: width 0.3s;
+        }
+
+        /* Analytics Styles */
+        .analytics-content {
+            padding: 10px 0;
+        }
+
+        /* Integrations Styles */
+        .integration-section {
+            padding: 10px 0;
+        }
+
+        .integration-section button {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: none;
+            border-radius: 4px;
+            color: #fff;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: background 0.2s;
+        }
+
+        .integration-section button.slack {
+            background: #4A154B;
+        }
+
+        .integration-section button.teams {
+            background: #6264A7;
+        }
+
+        .integration-section button.drive {
+            background: #4285F4;
+        }
+
+        .integration-section button:hover {
+            opacity: 0.8;
+        }
+
+        /* Priority Message Styles */
+        .message.priority-high {
+            border-left: 3px solid #ff3b30;
+            background: rgba(255, 59, 48, 0.1);
+        }
+
+        .message.priority-medium {
+            border-left: 3px solid #ff9500;
+            background: rgba(255, 149, 0, 0.1);
+        }
+
+        /* Role Badges */
+        .role-badge {
+            font-size: 12px;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-left: 8px;
+            color: #fff;
+        }
+
+        .role-tech-lead {
+            background: #007AFF;
+        }
+
+        .role-manager {
+            background: #FF9500;
+        }
+
+        .role-senior-tech {
+            background: #5856D6;
+        }
+
+        /* Emoji Picker Styles */
+        .emoji-picker {
+            position: absolute;
+            bottom: 60px;
+            left: 16px;
+            background: var(--secondary);
+            padding: 10px;
+            border-radius: 8px;
+            display: none;
+            grid-template-columns: repeat(8, 1fr);
+            gap: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+            max-width: 300px;
+            z-index: 100;
+        }
+
+        .emoji-picker.active {
+            display: grid;
+        }
+
+        .emoji {
+            cursor: pointer;
+            font-size: 20px;
+            transition: transform 0.2s;
+        }
+
+        .emoji:hover {
+            transform: scale(1.2);
+        }
+
+        /* Scrollbar Styles */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--secondary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--hover-bg);
+            border-radius: 4px;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 1200px) {
+            .channel-list {
+                width: 200px;
+            }
+        }
+
+        @media (max-width: 992px) {
+            body {
+                grid-template-columns: 50px 200px 1fr;
+            }
+
+            .server-icon, .admin-trigger, .add-server {
+                width: 40px;
+                height: 40px;
+                font-size: 18px;
+            }
+
+            .channel-list {
+                width: 180px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                grid-template-columns: 40px 150px 1fr;
+            }
+
+            .server-icon, .admin-trigger, .add-server {
+                width: 36px;
+                height: 36px;
+                font-size: 16px;
+            }
+
+            .channel-list {
+                width: 150px;
+            }
+
+            /* Stack admin panel vertically on small screens */
+            .admin-panel {
+                width: 90%;
+                max-height: 80vh;
+            }
+        }
+
+        .howto-button {
+            background: var(--primary);
+            color: var(--text);
+            border: none;
+            padding: 8px 16px;
+            border-radius: var(--border-radius);
+            margin-left: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: background 0.2s;
+        }
+
+        .howto-button:hover {
+            background: #6e44d5;
+        }
+
+        .message[data-pinned="true"] {
+            background: rgba(120, 86, 255, 0.1) !important;
+            border-left: 3px solid var(--primary) !important;
+        }
+
+        .message[data-pinned="true"] .message-time {
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        .message[data-pinned="true"] a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .message[data-pinned="true"] a:hover {
+            text-decoration: underline;
+        }
+
+        /* Message Actions Styles */
+        .message-actions {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+        }
+
+        .message-actions-button {
+            background: none;
+            border: none;
+            color: var(--text);
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+
+        .message-actions-button:hover {
+            background: var(--hover-bg);
+        }
+
+        .message-actions-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: var(--secondary);
+            border-radius: var(--border-radius);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            display: none;
+            z-index: 100;
+            min-width: 200px;
+        }
+
+        .message-actions-menu.active {
+            display: block;
+        }
+
+        .message-action-item {
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .message-action-item:hover {
+            background: var(--hover-bg);
+        }
+
+        .message-reply-bubble {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: var(--border-radius);
+            padding: 8px;
+            margin-bottom: 8px;
+            font-size: 0.9em;
+            border-left: 3px solid var(--primary);
+        }
+
+        .message.highlighted {
+            background: rgba(255, 166, 0, 0.1);
+            animation: highlight-fade 2s forwards;
+        }
+
+        @keyframes highlight-fade {
+            from { background: rgba(255, 166, 0, 0.1); }
+            to { background: rgba(255, 166, 0, 0.05); }
+        }
+
+        .reply-indicator {
+            background: var(--secondary);
+            padding: 8px;
+            margin-bottom: 8px;
+            border-radius: var(--border-radius);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .reply-indicator .cancel-reply {
+            margin-left: auto;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 4px;
+        }
+
+        .reply-indicator .cancel-reply:hover {
+            background: var(--hover-bg);
+        }
+
+        /* Forward Modal Styles */
+        .forward-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .forward-content {
+            background: var(--secondary);
+            padding: 20px;
+            border-radius: var(--border-radius);
+            width: 400px;
+            max-width: 90%;
+        }
+
+        .forward-preview {
+            margin: 10px 0;
+            padding: 10px;
+            background: var(--background);
+            border-radius: var(--border-radius);
+        }
+
+        .forward-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .forward-options select {
+            padding: 8px;
+            border-radius: var(--border-radius);
+            background: var(--background);
+            color: var(--text);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .forward-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .forward-actions button {
+            padding: 8px 16px;
+            border-radius: var(--border-radius);
+            border: none;
+            cursor: pointer;
+        }
+
+        /* Copy Feedback Styles */
+        .copy-feedback {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--primary);
+            color: var(--text);
+            padding: 10px 20px;
+            border-radius: var(--border-radius);
+            animation: fadeOut 2s forwards;
+        }
+
+        @keyframes fadeOut {
+            0% { opacity: 1; }
+            70% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+
+        /* Highlighted Message Style */
+        .message.highlighted {
+            background: rgba(255, 166, 0, 0.1);
+            animation: highlight-fade 2s forwards;
+        }
+
+        @keyframes highlight-fade {
+            from { background: rgba(255, 166, 0, 0.1); }
+            to { background: rgba(255, 166, 0, 0.05); }
+        }
+
+        /* Pinned Message Styles */
+        .message[data-pinned="true"] {
+            background: rgba(120, 86, 255, 0.1) !important;
+            border-left: 3px solid var(--primary) !important;
+        }
+
+        .message[data-pinned="true"] .message-time {
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        .message[data-pinned="true"] a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .message[data-pinned="true"] a:hover {
+            text-decoration: underline;
+        }
+
+        /* Update Pinned Message Styles */
+        .message[data-pinned="true"] .message-time {
+            color: var(--primary);
+        }
+
+        /* Clickable Links */
+        .message a {
+            color: var(--primary);
+            text-decoration: none;
+            transition: text-decoration 0.2s;
+        }
+
+        .message a:hover {
+            text-decoration: underline;
+        }
+
+        /* Link Styles */
+        .message a {
+            color: var(--primary);
+            text-decoration: none;
+            transition: all 0.2s ease;
+            padding: 2px 4px;
+            border-radius: 4px;
+        }
+
+        .message a:hover {
+            background: rgba(120, 86, 255, 0.1);
+            text-decoration: underline;
+        }
+
+        /* Pinned Message Styles */
+        .message[data-pinned="true"] {
+            background: rgba(120, 86, 255, 0.1);
+            border-left: 3px solid var(--primary);
+            padding-left: 12px;
+        }
+
+        .message[data-pinned="true"] a {
+            color: var(--primary);
+            font-weight: 500;
+        }
+
+        .message[data-pinned="true"] .message-time {
+            color: var(--primary);
+            font-weight: 500;
+        }
+
+        /* Message Container Styles */
+        .messages {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .message {
+            order: 0;
+        }
+
+        .message[data-pinned="true"] {
+            order: -1;
+        }
+    </style>
+</head>
+<body>
+    <!-- Admin Panel -->
+    <div id="adminPanel" class="admin-panel">
+        <div class="admin-header">
+            <h3>GVTech Hub Controls</h3>
+            <button class="tool-button" onclick="toggleAdminPanel()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <div class="admin-tabs">
+            <button class="tab-button active" onclick="switchTab('simulation')">
+                <i class="fas fa-robot"></i> Chat Simulation
+            </button>
+            <button class="tab-button" onclick="switchTab('locations')">
+                <i class="fas fa-building"></i> Locations
+            </button>
+            <button class="tab-button" onclick="switchTab('inventory')">
+                <i class="fas fa-box"></i> Inventory
+            </button>
+            <button class="tab-button" onclick="switchTab('tickets')">
+                <i class="fas fa-ticket-alt"></i> Tickets
+            </button>
+            <!-- New Tabs for Integrations and Analytics -->
+            <button class="tab-button" onclick="switchTab('integrations')">
+                <i class="fas fa-plug"></i> Integrations
+            </button>
+            <button class="tab-button" onclick="switchTab('analytics')">
+                <i class="fas fa-chart-line"></i> Analytics
+            </button>
+        </div>
+
+        <div class="admin-content">
+            <!-- Chat Simulation Tab -->
+            <div id="simulationTab" class="tab-content active">
+                <div class="control-group">
+                    <label for="aiChatChannel"><strong>AI Chat Simulation</strong></label>
+                    <div class="control-row" style="margin-top: 8px;">
+                        <select id="aiChatChannel" style="width: 100%; padding: 6px; border-radius: 4px; border: none;">
+                            <optgroup label="Location A">
+                                <option value="urgent-repairs-a">Urgent Repairs</option>
+                                <option value="repairs-in-progress-a">Repairs In Progress</option>
+                            </optgroup>
+                            <optgroup label="Location B">
+                                <option value="urgent-repairs-b">Urgent Repairs</option>
+                                <option value="repairs-in-progress-b">Repairs In Progress</option>
+                            </optgroup>
+                            <optgroup label="Technical">
+                                <option value="diagnostic-tips">Diagnostic Tips</option>
+                                <option value="tech-updates">Tech Updates</option>
+                            </optgroup>
+                            <optgroup label="Staff Hub">
+                                <option value="general">General</option>
+                                <option value="gaming">Gaming</option>
+                            </optgroup>
+                        </select>
+                        <button class="admin-button" onclick="toggleAIChat()" style="width: 100%; margin-top: 10px;">
+                            <i class="fas fa-robot"></i> Toggle AI Chat
+                        </button>
+                    </div>
+                    <div class="control-row" style="margin-top: 16px;">
+                        <label for="aiChatFrequency"><strong>Message Frequency (seconds):</strong></label>
+                        <input type="number" id="aiChatFrequency" value="10" min="1" max="60" style="width: 100%; padding: 6px; border-radius: 4px; border: none; margin-top: 8px;">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Locations Tab -->
+            <div id="locationsTab" class="tab-content">
+                <div class="control-group">
+                    <label><strong>Location Status</strong></label>
+                    <div class="location-status" style="margin-top: 16px;">
+                        <div class="status-card" style="background: rgba(255,255,255,0.05); border-radius: var(--border-radius); padding: 12px; margin-bottom: 16px;">
+                            <h4>Location A</h4>
+                            <div class="status-row" style="display: flex; justify-content: space-between; margin-top: 8px;">
+                                <span>Active Repairs:</span>
+                                <span class="status-value">12</span>
+                            </div>
+                            <div class="status-row" style="display: flex; justify-content: space-between; margin-top: 8px;">
+                                <span>Urgent Cases:</span>
+                                <span class="status-value urgent" style="color: #ff3b30;">3</span>
+                            </div>
+                            <div class="status-row" style="display: flex; justify-content: space-between; margin-top: 8px;">
+                                <span>Staff Online:</span>
+                                <span class="status-value">8</span>
+                            </div>
+                        </div>
+                        <div class="status-card" style="background: rgba(255,255,255,0.05); border-radius: var(--border-radius); padding: 12px;">
+                            <h4>Location B</h4>
+                            <div class="status-row" style="display: flex; justify-content: space-between; margin-top: 8px;">
+                                <span>Active Repairs:</span>
+                                <span class="status-value">9</span>
+                            </div>
+                            <div class="status-row" style="display: flex; justify-content: space-between; margin-top: 8px;">
+                                <span>Urgent Cases:</span>
+                                <span class="status-value urgent" style="color: #ff3b30;">1</span>
+                            </div>
+                            <div class="status-row" style="display: flex; justify-content: space-between; margin-top: 8px;">
+                                <span>Staff Online:</span>
+                                <span class="status-value">6</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Inventory Tab -->
+            <div id="inventoryTab" class="tab-content">
+                <div class="control-group">
+                    <div class="inventory-header">
+                        <h4>Parts Inventory</h4>
+                        <div class="inventory-filters">
+                            <select id="locationFilter" style="padding: 6px; border-radius: 4px; border: none;">
+                                <option value="all">All Locations</option>
+                                <option value="location-a">Location A</option>
+                                <option value="location-b">Location B</option>
+                            </select>
+                            <input type="text" placeholder="Search parts..." id="partSearch" style="padding: 6px; border-radius: 4px; border: none;">
+                        </div>
+                    </div>
+                    
+                    <div class="inventory-grid" id="inventoryGrid">
+                        <!-- Sample inventory items -->
+                        <div class="inventory-card low-stock" data-location="location-a">
+                            <div class="part-header">
+                                <span class="part-icon">📱</span>
+                                <span class="stock-badge" style="background: #ff3b30; padding: 2px 6px; border-radius: 4px; color: #fff;">Low Stock</span>
+                            </div>
+                            <h5>iPhone 13 Screen</h5>
+                            <div class="stock-info">
+                                <div class="stock-bar" style="--stock-level: 20%"></div>
+                                <span>2 units left</span>
+                            </div>
+                            <div class="card-actions">
+                                <button class="admin-button small">Order</button>
+                                <button class="admin-button small">Transfer</button>
+                            </div>
+                        </div>
+                        <!-- Additional inventory items can be added here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tickets Tab -->
+            <div id="ticketsTab" class="tab-content">
+                <div class="tickets-list">
+                    <!-- Sample Ticket -->
+                    <div class="ticket-card urgent">
+                        <h5>Server Downtime Issue</h5>
+                        <p>Critical server downtime affecting Location A. Immediate attention required.</p>
+                        <div class="ticket-progress">
+                            <div class="progress-bar" style="--progress: 70%;"></div>
+                            <span>70% resolved</span>
+                        </div>
+                    </div>
+                    <!-- Additional tickets can be added here -->
+                </div>
+            </div>
+
+            <!-- Integrations Tab -->
+            <div id="integrationsTab" class="tab-content">
+                <div class="integration-section">
+                    <h4>Third-Party Integrations</h4>
+                    <button class="admin-button slack" onclick="connectSlack()">
+                        <i class="fab fa-slack"></i> Connect Slack
+                    </button>
+                    <button class="admin-button teams" onclick="connectTeams()">
+                        <i class="fab fa-teamspeak"></i> Connect Teams
+                    </button>
+                    <button class="admin-button drive" onclick="connectGoogleDrive()">
+                        <i class="fab fa-google-drive"></i> Connect Google Drive
+                    </button>
+                </div>
+            </div>
+
+            <!-- Analytics Tab -->
+            <div id="analyticsTab" class="tab-content">
+                <div class="analytics-content">
+                    <h4>Inventory Analytics</h4>
+                    <canvas id="inventoryChart" width="400" height="200"></canvas>
+                    
+                    <h4 style="margin-top: 30px;">Task Analytics</h4>
+                    <canvas id="taskChart" width="400" height="200"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Chat Interface -->
+    <div class="server-list">
+        <!-- Existing Servers -->
+        <div class="server-icon active-server" data-server-id="1">GV</div>
+        <div class="server-icon" data-server-id="2">📱</div>
+        <div class="server-icon" data-server-id="3">💻</div>
+        <!-- Add Server Button -->
+        <div class="add-server" id="addServer" title="Add Server">
+            <i class="fas fa-plus"></i>
+        </div>
+        <!-- Admin Trigger -->
+        <div class="admin-trigger">
+            <i class="fas fa-cog"></i>
+        </div>
+    </div>
+    <!-- Channel List -->
+    <div class="channel-list" id="channelList">
+        <!-- Channels will be dynamically added here based on selected server -->
+    </div>
+
+    <!-- Chat Area -->
+    <div class="chat-container">
+        <div class="chat-header">
+            <h2># general</h2>
+        </div>
+        
+        <div class="messages" id="messageContainer">
+            <!-- Messages will be dynamically added here -->
+        </div>
+
+        <div class="message-input">
+            <div class="message-tools">
+                <button class="tool-button" id="emojiButton">
+                    <i class="fas fa-smile"></i>
+                </button>
+                <button class="tool-button">
+                    <i class="fas fa-paperclip"></i>
+                </button>
+                <button class="tool-button">
+                    <i class="fas fa-gift"></i>
+                </button>
+            </div>
+            <input type="text" placeholder="Send a message..." id="messageInput">
+            <button class="howto-button" onclick="openHowTo()">
+                <i class="fas fa-question-circle"></i> HOW TO
+            </button>
+        </div>
+    </div>    
+
+    <script>
+    // Core Variables
+    const messageInput = document.getElementById('messageInput');
+    const messageContainer = document.getElementById('messageContainer');
+    const emojiPicker = document.getElementById('emojiPicker');
+    const emojiButton = document.getElementById('emojiButton');
+    const addServerButton = document.getElementById('addServer');
+    const serverIcons = document.querySelectorAll('.server-icon[data-server-id]');
+    const channelList = document.getElementById('channelList');
+    let currentServerId = 1; // Default server
+    let currentChannel = 'general';
+    let aiChatInterval;
+    let isAIChatActive = false;
+
+    // Server Data Structure
+    let servers = [
+        {
+            id: 1,
+            name: 'GV',
+            icon: 'GV',
+            categories: [
+                {
+                    name: 'Location A',
+                    channels: [
+                        { name: 'urgent-repairs', icon: '🚨', priority: 'high', notifications: 3 },
+                        { name: 'front-desk', icon: '💼' },
+                        { name: 'repairs-in-progress', icon: '🔧' },
+                        { name: 'inventory-requests', icon: '📦' }
+                    ]
+                },
+                {
+                    name: 'Technical Resources',
+                    channels: [
+                        { name: 'diagnostic-tips', icon: '💡' },
+                        { name: 'repair-guides', icon: '📚' },
+                        { name: 'tech-updates', icon: '🔄' },
+                        { name: 'training-materials', icon: '📋' }
+                    ]
+                },
+                {
+                    name: 'Staff Hub',
+                    channels: [
+                        { name: 'announcements', icon: '📢' },
+                        { name: 'general', icon: '💬' },
+                        { name: 'gaming', icon: '🎮' },
+                        { name: 'off-topic', icon: '☕' }
+                    ]
+                }
+            ],
+            messages: {
+                'urgent-repairs': [
+                    { text: "Urgent: Server down at Location A. Immediate fix required!", user: { name: 'TechLead_Mike', avatar: '👨‍💻', role: 'Tech Lead' }, time: '10:00 AM' },
+                    { text: "Critical: Overheating issue detected in mainframe.", user: { name: 'Service_Sarah', avatar: '👩‍💼', role: 'Customer Service' }, time: '10:05 AM' }
+                ],
+                'front-desk': [],
+                'repairs-in-progress': [],
+                'inventory-requests': [],
+                'diagnostic-tips': [],
+                'repair-guides': [],
+                'tech-updates': [],
+                'training-materials': [],
+                'announcements': [],
+                'general': [],
+                'gaming': [],
+                'off-topic': []
+            }
+        },
+        {
+            id: 2,
+            name: 'Mobile Dept',
+            icon: '���',
+            categories: [
+                {
+                    name: 'Location B',
+                    channels: [
+                        { name: 'urgent-repairs', icon: '🚨', priority: 'high', notifications: 1 },
+                        { name: 'front-desk', icon: '💼' },
+                        { name: 'repairs-in-progress', icon: '🔧' },
+                        { name: 'inventory-requests', icon: '' }
+                    ]
+                },
+                {
+                    name: 'Technical Resources',
+                    channels: [
+                        { name: 'diagnostic-tips', icon: '💡' },
+                        { name: 'repair-guides', icon: '📚' },
+                        { name: 'tech-updates', icon: '🔄' },
+                        { name: 'training-materials', icon: '📋' }
+                    ]
+                },
+                {
+                    name: 'Staff Hub',
+                    channels: [
+                        { name: 'announcements', icon: '📢' },
+                        { name: 'general', icon: '💬' },
+                        { name: 'gaming', icon: '🎮' },
+                        { name: 'off-topic', icon: '☕' }
+                    ]
+                }
+            ],
+            messages: {
+                'urgent-repairs': [
+                    { text: "Emergency: Data loss reported, need assistance ASAP.", user: { name: 'Repair_Ryan', avatar: '🔧', role: 'Senior Tech' }, time: '11:00 AM' }
+                ],
+                'front-desk': [],
+                'repairs-in-progress': [],
+                'inventory-requests': [],
+                'diagnostic-tips': [],
+                'repair-guides': [],
+                'tech-updates': [],
+                'training-materials': [],
+                'announcements': [],
+                'general': [],
+                'gaming': [],
+                'off-topic': []
+            }
+        },
+        {
+            id: 3,
+            name: 'Computer Dept',
+            icon: '💻',
+            categories: [
+                {
+                    name: 'Location C',
+                    channels: [
+                        { name: 'urgent-repairs', icon: '🚨', priority: 'high', notifications: 0 },
+                        { name: 'front-desk', icon: '����' },
+                        { name: 'repairs-in-progress', icon: '🔧' },
+                        { name: 'inventory-requests', icon: '📦' }
+                    ]
+                },
+                {
+                    name: 'Technical Resources',
+                    channels: [
+                        { name: 'diagnostic-tips', icon: '💡' },
+                        { name: 'repair-guides', icon: '📚' },
+                        { name: 'tech-updates', icon: '🔄' },
+                        { name: 'training-materials', icon: '📋' }
+                    ]
+                },
+                {
+                    name: 'Staff Hub',
+                    channels: [
+                        { name: 'announcements', icon: '📢' },
+                        { name: 'general', icon: '💬' },
+                        { name: 'gaming', icon: '🎮' },
+                        { name: 'off-topic', icon: '☕' }
+                    ]
+                }
+            ],
+            messages: {
+                'urgent-repairs': [],
+                'front-desk': [],
+                'repairs-in-progress': [],
+                'inventory-requests': [],
+                'diagnostic-tips': [],
+                'repair-guides': [],
+                'tech-updates': [],
+                'training-materials': [],
+                'announcements': [],
+                'general': [],
+                'gaming': [],
+                'off-topic': []
+            }
+        }
+    ];
+
+    // AI Chat Configuration
+    const aiUsers = [
+        { name: 'TechLead_Mike', avatar: '👨‍💻', role: 'Tech Lead' },
+        { name: 'Service_Sarah', avatar: '👩‍💼', role: 'Customer Service' },
+        { name: 'Repair_Ryan', avatar: '🔧', role: 'Senior Tech' },
+        { name: 'Inventory_Ian', avatar: '📦', role: 'Inventory Manager' },
+        { name: 'Manager_Mary', avatar: '👩‍💼', role: 'Location Manager' }
+    ];
+
+    const conversationTopics = {
+        'diagnostic-tips': [
+            "Anyone seen this iPhone 13 error before? Screen flickering after water damage.",
+            "Quick tip: Always check battery health before deep diagnostics.",
+            "New diagnostic tool available for MacBook logic board testing.",
+            "Found a faster way to diagnose Samsung charging issues.",
+            "Remember to document all diagnostic steps in the system."
+        ],
+        'repairs-in-progress-a': [
+            "Need a second opinion on this MacBook repair.",
+            "Customer waiting - ETA on parts delivery?",
+            "Complex repair case - anyone available to assist?",
+            "Successfully fixed that tricky iPad issue.",
+            "Who has experience with this model's screen replacement?"
+        ],
+        'urgent-repairs-a': [
+            "Urgent: Server down at Location A. Immediate fix required!",
+            "Critical: Overheating issue detected in mainframe.",
+            "Emergency: Data loss reported, need assistance ASAP.",
+            "High priority: Network outage affecting all services.",
+            "Alert: Security breach detected, initiating protocols."
+        ],
+        'general': [
+            "Great job on hitting our repair targets this week!",
+            "Who's up for lunch?",
+            "New repair tools arriving next week.",
+            "Remember to update your training certificates.",
+            "Customer satisfaction scores looking good!"
+        ],
+        'gaming': [
+            "Anyone tried the new game release?",
+            "Looking for teammates for an online match.",
+            "Game night this Friday!",
+            "Discussing the latest gaming trends.",
+            "Best gaming setups? Share your ideas!"
+        ]
+    };
+
+    // Initialize with default server
+    let currentServer = servers.find(server => server.id === currentServerId);
+
+    // Function to render channels based on current server
+    function renderChannels() {
+        channelList.innerHTML = ''; // Clear existing channels
+
+        currentServer.categories.forEach(category => {
+            const categoryDiv = document.createElement('div');
+            categoryDiv.className = 'category';
+
+            const categoryHeader = document.createElement('div');
+            categoryHeader.className = 'category-header collapsed';
+            categoryHeader.innerHTML = `
+                <i class="fas fa-chevron-down"></i>
+                <h3>${category.name}</h3>
+            `;
+            categoryDiv.appendChild(categoryHeader);
+
+            const channelGroup = document.createElement('div');
+            channelGroup.className = 'channel-group';
+
+            category.channels.forEach(channel => {
+                const channelItem = document.createElement('div');
+                channelItem.className = 'channel-item';
+                if (channel.priority === 'high') {
+                    channelItem.classList.add('priority-high');
+                }
+                channelItem.dataset.channelName = channel.name;
+
+                channelItem.innerHTML = `
+                    <span class="channel-icon">${channel.icon}</span>
+                    <span class="channel-name"># ${channel.name}</span>
+                    ${channel.notifications ? `<span class="notification-badge">${channel.notifications}</span>` : ''}
+                `;
+                channelGroup.appendChild(channelItem);
+            });
+
+            categoryDiv.appendChild(channelGroup);
+            channelList.appendChild(categoryDiv);
+
+            // Add event listener for collapsing/expanding categories
+            categoryHeader.addEventListener('click', function() {
+                this.classList.toggle('collapsed');
+                // The CSS handles the display based on the 'collapsed' class
+            });
+        });
+
+        // Add event listeners to channel items
+        document.querySelectorAll('.channel-item').forEach(channel => {
+            channel.addEventListener('click', function() {
+                const channelName = this.querySelector('.channel-name').textContent.replace('# ', '');
+                document.querySelector('.chat-header h2').textContent = `# ${channelName}`;
+                currentChannel = channelName;
+                renderMessages();
+            });
+        });
+    }
+
+    // Function to render messages based on current server and channel
+    function renderMessages() {
+        messageContainer.innerHTML = '';
+        const messages = currentServer.messages[currentChannel] || [];
+        
+        // Sort messages so pinned ones appear first
+        messages.sort((a, b) => {
+            if (a.isPinned && !b.isPinned) return -1;
+            if (!a.isPinned && b.isPinned) return 1;
+            return 0;
+        });
+        
+        messages.forEach(msg => {
+            createMessage(
+                msg.text,
+                msg.user,
+                msg.priority || '',
+                msg.time,
+                msg.replyTo,
+                msg.isPinned
+            );
+        });
+        
+        // Scroll to bottom of message container
+        messageContainer.scrollTop = messageContainer.scrollHeight;
+    }
+
+    // Admin Panel Functions
+    function toggleAdminPanel() {
+        document.getElementById('adminPanel').classList.toggle('active');
+    }
+
+    function switchTab(tabName) {
+        document.querySelectorAll('.tab-content').forEach(tab => {
+            tab.classList.remove('active');
+        });
+        document.querySelectorAll('.tab-button').forEach(button => {
+            button.classList.remove('active');
+        });
+
+        document.getElementById(tabName + 'Tab').classList.add('active');
+        document.querySelector(`[onclick="switchTab('${tabName}')"]`).classList.add('active');
+    }
+
+    // Message Creation Functions
+    function createMessage(text, user, priority = '', time = '', replyTo = null, isPinned = false) {
+        const message = document.createElement('div');
+        message.className = `message ${priority}`;
+        message.id = `msg-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+        
+        if (isPinned || time === 'Pinned Message') {
+            message.setAttribute('data-pinned', 'true');
+            message.style.order = '-1';
+        }
+
+        // Convert markdown links to HTML and make them open in new tab
+        const formattedText = text.replace(
+            /\[([^\]]+)\]\(([^\)]+)\)/g, 
+            '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>'
+        );
+
+        let replyBubble = '';
+        if (replyTo) {
+            replyBubble = `
+                <div class="message-reply-bubble">
+                    <strong>${replyTo.user}</strong>
+                    <p>${replyTo.text.substring(0, 100)}${replyTo.text.length > 100 ? '...' : ''}</p>
+                </div>
+            `;
+        }
+
+        message.innerHTML = `
+            ${replyBubble}
+            <div class="message-header">
+                <span class="user-avatar">${user.avatar}</span>
+                <strong>${user.name}</strong>
+                ${user.role ? `<span class="role-badge role-${user.role.toLowerCase()}">${user.role}</span>` : ''}
+                <span class="message-time">${time}</span>
+                <div class="message-actions">
+                    <button class="message-actions-button" onclick="toggleMessageActions(this, event)">
+                        <i class="fas fa-ellipsis-v"></i>
+                    </button>
+                    <div class="message-actions-menu">
+                        <div class="message-action-item" onclick="replyToMessage('${message.id}')">
+                            <i class="fas fa-reply"></i> Reply
+                        </div>
+                        <div class="message-action-item" onclick="forwardMessage('${message.id}')">
+                            <i class="fas fa-share"></i> Forward
+                        </div>
+                        <div class="message-action-item" onclick="copyMessageLink('${message.id}')">
+                            <i class="fas fa-link"></i> Copy Link
+                        </div>
+                        <div class="message-action-item" onclick="pinMessage('${message.id}')">
+                            <i class="fas fa-thumbtack"></i> Pin
+                        </div>
+                        <div class="message-action-item" onclick="markUnread('${message.id}')">
+                            <i class="fas fa-circle"></i> Mark as Unread
+                        </div>
+                        ${user.name === 'You' ? `
+                            <div class="message-action-item" onclick="deleteMessage('${message.id}')">
+                                <i class="fas fa-trash"></i> Delete
+                            </div>
+                        ` : ''}
+                    </div>
+                </div>
+            </div>
+            <p>${formattedText}</p>
+        `;
+        
+        messageContainer.appendChild(message);
+        return message;
+    }
+
+    // AI Chat Functions
+    function toggleAIChat() {
+        const channel = document.getElementById('aiChatChannel').value;
+        const frequency = parseInt(document.getElementById('aiChatFrequency').value) * 1000;
+        const button = document.querySelector('[onclick="toggleAIChat()"]');
+        
+        if (!isAIChatActive) {
+            startAIChat(channel, frequency);
+            button.innerHTML = '<i class="fas fa-robot"></i> Stop AI Chat';
+            button.classList.add('active');
+        } else {
+            stopAIChat();
+            button.innerHTML = '<i class="fas fa-robot"></i> Start AI Chat';
+            button.classList.remove('active');
+        }
+        
+        isAIChatActive = !isAIChatActive;
+    }
+
+    function startAIChat(channel, frequency) {
+        aiChatInterval = setInterval(() => {
+            const user = aiUsers[Math.floor(Math.random() * aiUsers.length)];
+            const messages = conversationTopics[channel] || conversationTopics['general'];
+            const messageText = messages[Math.floor(Math.random() * messages.length)];
+            
+            createAIMessage(messageText, user);
+            // Append message to server's messages
+            const serverIndex = servers.findIndex(s => s.id === currentServerId);
+            if (serverIndex !== -1) {
+                servers[serverIndex].messages[channel] = servers[serverIndex].messages[channel] || [];
+                servers[serverIndex].messages[channel].push({ text: messageText, user: user, time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) });
+            }
+            
+            // 50% chance to generate a response
+            if (Math.random() > 0.5) {
+                setTimeout(() => {
+                    const responder = aiUsers[Math.floor(Math.random() * aiUsers.length)];
+                    const response = "Thanks for the update! I'll look into that.";
+                    createAIMessage(response, responder);
+                    if (serverIndex !== -1) {
+                        servers[serverIndex].messages[channel].push({ text: response, user: responder, time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) });
+                    }
+                }, 2000);
+            }
+        }, frequency);
+    }
+
+    function stopAIChat() {
+        clearInterval(aiChatInterval);
+    }
+
+    function createAIMessage(text, user) {
+        // Only post AI messages in channels where AI is active
+        if (currentChannel === (user.role.toLowerCase().includes('tech') ? 'repairs-in-progress' : 'general')) {
+            createMessage(text, user);
+        }
+    }
+
+    // Event Listeners
+    messageInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter' && this.value.trim() !== '') {
+            let replyData = null;
+            
+            // Check if this is a reply
+            if (this.dataset.replyTo) {
+                replyData = JSON.parse(this.dataset.replyTo);
+            }
+            
+            // Create message with reply if it exists
+            createMessage(
+                this.value,
+                { name: 'You', avatar: '👤' },
+                '',
+                new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
+                replyData
+            );
+            
+            // Clear input and remove reply indicator
+            this.value = '';
+            removeReplyIndicator();
+        }
+    });
+
+    emojiButton.onclick = () => {
+        emojiPicker.classList.toggle('active');
+    };
+
+    // Close emoji picker when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('.emoji-picker') && !e.target.closest('#emojiButton')) {
+            emojiPicker.classList.remove('active');
+        }
+    });
+
+    // Add emojis to the message input when clicked
+    document.querySelectorAll('.emoji').forEach(emoji => {
+        emoji.addEventListener('click', () => {
+            messageInput.value += emoji.textContent;
+            emojiPicker.classList.remove('active');
+            messageInput.focus();
+        });
+    });
+
+    // Server click handlers
+    serverIcons.forEach(server => {
+        server.addEventListener('click', function() {
+            const serverId = parseInt(this.dataset.serverId);
+            if (!isNaN(serverId)) {
+                switchServer(serverId);
+            }
+        });
+    });
+
+    // Function to switch servers
+    function switchServer(serverId) {
+        currentServerId = serverId;
+        currentServer = servers.find(server => server.id === serverId);
+        if (!currentServer) return;
+
+        // Highlight the active server
+        serverIcons.forEach(server => {
+            if (parseInt(server.dataset.serverId) === serverId) {
+                server.classList.add('active-server');
+                server.style.background = 'var(--primary)';
+                server.style.borderRadius = '12px';
+            } else {
+                server.classList.remove('active-server');
+                server.style.background = 'var(--secondary)';
+                server.style.borderRadius = '50%';
+            }
+        });
+
+        // Reset chat header and channel
+        if (currentServer.categories.length > 0) {
+            currentChannel = currentServer.categories[0].channels[0].name;
+            document.querySelector('.chat-header h2').textContent = `# ${currentChannel}`;
+            renderChannels();
+            renderMessages();
+        } else {
+            channelList.innerHTML = '';
+            messageContainer.innerHTML = '';
+            document.querySelector('.chat-header h2').textContent = `#`;
+        }
+    }
+
+    // Add Server Functionality
+    addServerButton.addEventListener('click', function() {
+        const serverName = prompt("Enter the new server name:");
+        if (!serverName) return;
+
+        const serverIcon = prompt("Enter an emoji for the server icon (e.g., 🛠️):", "🛠️");
+        if (!serverIcon) return;
+
+        const newServerId = servers.length > 0 ? servers[servers.length - 1].id + 1 : 1;
+
+        const newServer = {
+            id: newServerId,
+            name: serverName,
+            icon: serverIcon,
+            categories: [
+                {
+                    name: 'Location A',
+                    channels: [
+                        { name: 'urgent-repairs', icon: '🚨', priority: 'high', notifications: 0 },
+                        { name: 'front-desk', icon: '💼' },
+                        { name: 'repairs-in-progress', icon: '���' },
+                        { name: 'inventory-requests', icon: '📦' }
+                    ]
+                },
+                {
+                    name: 'Technical Resources',
+                    channels: [
+                        { name: 'diagnostic-tips', icon: '💡' },
+                        { name: 'repair-guides', icon: '📚' },
+                        { name: 'tech-updates', icon: '🔄' },
+                        { name: 'training-materials', icon: '📋' }
+                    ]
+                },
+                {
+                    name: 'Staff Hub',
+                    channels: [
+                        { name: 'announcements', icon: '📢' },
+                        { name: 'general', icon: '💬' },
+                        { name: 'gaming', icon: '🎮' },
+                        { name: 'off-topic', icon: '☕' }
+                    ]
+                }
+            ],
+            messages: {
+                'urgent-repairs': [],
+                'front-desk': [],
+                'repairs-in-progress': [],
+                'inventory-requests': [],
+                'diagnostic-tips': [],
+                'repair-guides': [],
+                'tech-updates': [],
+                'training-materials': [],
+                'announcements': [],
+                'general': [],
+                'gaming': [],
+                'off-topic': []
+            }
+        };
+
+        servers.push(newServer);
+        renderServerList();
+    });
+
+    // Function to render server list
+    function renderServerList() {
+        // Remove all server icons except the existing ones and addServerButton
+        serverIcons.forEach(server => {
+            if (parseInt(server.dataset.serverId) > 3) { // Assuming initial servers have IDs 1,2,3
+                server.remove();
+            }
+        });
+
+        // Re-render server icons
+        servers.forEach(server => {
+            if (server.id > 3) { // Initial servers are already in the HTML
+                const serverDiv = document.createElement('div');
+                serverDiv.className = 'server-icon';
+                serverDiv.dataset.serverId = server.id;
+                serverDiv.textContent = server.icon;
+                document.querySelector('.server-list').insertBefore(serverDiv, addServerButton);
+                serverDiv.addEventListener('click', function() {
+                    switchServer(server.id);
+                });
+            }
+        });
+    }
+
+    // Inventory Search Functionality
+    const partSearch = document.getElementById('partSearch');
+    const locationFilter = document.getElementById('locationFilter');
+    const inventoryGrid = document.getElementById('inventoryGrid');
+
+    partSearch.addEventListener('input', filterInventory);
+    locationFilter.addEventListener('change', filterInventory);
+
+    function filterInventory() {
+        const searchTerm = partSearch.value.toLowerCase();
+        const location = locationFilter.value;
+        const inventoryCards = inventoryGrid.querySelectorAll('.inventory-card');
+
+        inventoryCards.forEach(card => {
+            const partName = card.querySelector('h5').textContent.toLowerCase();
+            const cardLocation = card.getAttribute('data-location') || 'all';
+
+            const matchesSearch = partName.includes(searchTerm);
+            const matchesLocation = (location === 'all') || (cardLocation === location);
+
+            if (matchesSearch && matchesLocation) {
+                card.style.display = 'block';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    }
+
+    // Sample dynamic inventory data (can be replaced with actual data)
+    const sampleInventory = [
+        { name: 'Galaxy S21 Screen', location: 'location-a', stock: 5 },
+        { name: 'Dell XPS 13 Battery', location: 'location-b', stock: 2 },
+        { name: 'iPad Pro Charger', location: 'location-a', stock: 10 },
+        { name: 'Surface Pro Keyboard', location: 'location-b', stock: 0 },
+        // Add more inventory items as needed
+    ];
+
+    // Function to populate inventory grid
+    function populateInventory() {
+        inventoryGrid.innerHTML = ''; // Clear existing inventory
+        sampleInventory.forEach(item => {
+            const card = document.createElement('div');
+            card.className = 'inventory-card';
+            if (item.stock <= 2) {
+                card.classList.add('low-stock');
+            }
+            card.setAttribute('data-location', item.location);
+
+            card.innerHTML = `
+                <div class="part-header">
+                    <span class="part-icon">🔧</span>
+                    ${item.stock <= 2 ? '<span class="stock-badge">Low Stock</span>' : ''}
+                </div>
+                <h5>${item.name}</h5>
+                <div class="stock-info">
+                    <div class="stock-bar" style="--stock-level: ${Math.min((item.stock / 20) * 100, 100)}%"></div>
+                    <span>${item.stock} units left</span>
+                </div>
+                <div class="card-actions">
+                    <button class="admin-button small" onclick="handleOrderParts('${item.name}', '${item.location}')">Order</button>
+                    <button class="admin-button small" onclick="handleTransferParts('${item.name}', '${item.location}')">Transfer</button>
+                </div>
+            `;
+            inventoryGrid.appendChild(card);
+        });
+    }
+
+    populateInventory();
+
+    // Initial Server Highlight
+    switchServer(currentServerId);
+
+    // Initialize admin trigger
+    const adminTrigger = document.querySelector('.admin-trigger');
+    adminTrigger.onclick = toggleAdminPanel;
+
+    // Function to switch servers
+    function switchServer(serverId) {
+        currentServerId = serverId;
+        currentServer = servers.find(server => server.id === serverId);
+        if (!currentServer) return;
+
+        // Highlight the active server
+        serverIcons.forEach(server => {
+            if (parseInt(server.dataset.serverId) === serverId) {
+                server.classList.add('active-server');
+                server.style.background = 'var(--primary)';
+                server.style.borderRadius = '12px';
+            } else {
+                server.classList.remove('active-server');
+                server.style.background = 'var(--secondary)';
+                server.style.borderRadius = '50%';
+            }
+        });
+
+        // Reset chat header and channel
+        if (currentServer.categories.length > 0) {
+            currentChannel = currentServer.categories[0].channels[0].name;
+            document.querySelector('.chat-header h2').textContent = `# ${currentChannel}`;
+            renderChannels();
+            renderMessages();
+        } else {
+            channelList.innerHTML = '';
+            messageContainer.innerHTML = '';
+            document.querySelector('.chat-header h2').textContent = `#`;
+        }
+    }
+
+    // Integrations Functions (Placeholders)
+    function connectSlack() {
+        alert("Slack integration is not yet implemented.");
+        // Implement Slack OAuth and API integration here
+    }
+
+    function connectTeams() {
+        alert("Teams integration is not yet implemented.");
+        // Implement Teams OAuth and API integration here
+    }
+
+    function connectGoogleDrive() {
+        alert("Google Drive integration is not yet implemented.");
+        // Implement Google Drive OAuth and API integration here
+    }
+
+    // Analytics Initialization
+    window.onload = function() {
+        // Inventory Chart
+        const inventoryCtx = document.getElementById('inventoryChart').getContext('2d');
+        const inventoryChart = new Chart(inventoryCtx, {
+            type: 'bar',
+            data: {
+                labels: sampleInventory.map(item => item.name),
+                datasets: [{
+                    label: 'Units in Stock',
+                    data: sampleInventory.map(item => item.stock),
+                    backgroundColor: 'rgba(120, 86, 255, 0.6)',
+                    borderColor: 'rgba(120, 86, 255, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Task Chart (Sample Data)
+        const taskCtx = document.getElementById('taskChart').getContext('2d');
+        const taskChart = new Chart(taskCtx, {
+            type: 'pie',
+            data: {
+                labels: ['Completed Tasks', 'Pending Tasks', 'Overdue Tasks'],
+                datasets: [{
+                    data: [12, 5, 3],
+                    backgroundColor: [
+                        'rgba(52, 199, 89, 0.6)',
+                        'rgba(255, 149, 0, 0.6)',
+                        'rgba(255, 59, 48, 0.6)'
+                    ],
+                    borderColor: [
+                        'rgba(52, 199, 89, 1)',
+                        'rgba(255, 149, 0, 1)',
+                        'rgba(255, 59, 48, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false
+            }
+        });
+    }
+
+    // Function to switch servers
+    function switchServer(serverId) {
+        currentServerId = serverId;
+        currentServer = servers.find(server => server.id === serverId);
+        if (!currentServer) return;
+
+        // Highlight the active server
+        serverIcons.forEach(server => {
+            if (parseInt(server.dataset.serverId) === serverId) {
+                server.classList.add('active-server');
+                server.style.background = 'var(--primary)';
+                server.style.borderRadius = '12px';
+            } else {
+                server.classList.remove('active-server');
+                server.style.background = 'var(--secondary)';
+                server.style.borderRadius = '50%';
+            }
+        });
+
+        // Reset chat header and channel
+        if (currentServer.categories.length > 0) {
+            currentChannel = currentServer.categories[0].channels[0].name;
+            document.querySelector('.chat-header h2').textContent = `# ${currentChannel}`;
+            renderChannels();
+            renderMessages();
+        } else {
+            channelList.innerHTML = '';
+            messageContainer.innerHTML = '';
+            document.querySelector('.chat-header h2').textContent = `#`;
+        }
+    }
+
+    // Add inventory management functions
+    function handleOrderParts(itemName, location) {
+        const orderQuantity = prompt(`Enter quantity to order for ${itemName}:`, "1");
+        if (!orderQuantity) return;
+
+        const quantity = parseInt(orderQuantity);
+        if (isNaN(quantity) || quantity <= 0) {
+            alert("Please enter a valid quantity.");
+            return;
+        }
+
+        // Simulate order processing
+        alert(`Order placed for ${quantity} units of ${itemName} at ${location}.
+        Order Details:
+        - Item: ${itemName}
+        - Quantity: ${quantity}
+        - Location: ${location}
+        - Order ID: ORD-${Math.random().toString(36).substr(2, 9)}`);
+    }
+
+    function handleTransferParts(itemName, location) {
+        const locations = ['Location A', 'Location B', 'Location C'];
+        const currentLocation = location;
+        
+        // Filter out current location
+        const availableLocations = locations.filter(loc => 
+            loc.toLowerCase() !== currentLocation.replace('location-', '').toUpperCase()
+        );
+
+        // Create location options
+        const locationList = availableLocations.map((loc, index) => 
+            `${index + 1}. ${loc}`
+        ).join('\n');
+
+        const transferLocation = prompt(
+            `Select destination location for ${itemName}:\n${locationList}\n\nEnter location number:`,
+            "1"
+        );
+
+        if (!transferLocation) return;
+
+        const locationIndex = parseInt(transferLocation) - 1;
+        if (isNaN(locationIndex) || locationIndex < 0 || locationIndex >= availableLocations.length) {
+            alert("Please select a valid location.");
+            return;
+        }
+
+        const quantity = prompt(`Enter quantity to transfer:`, "1");
+        if (!quantity) return;
+
+        const transferQuantity = parseInt(quantity);
+        if (isNaN(transferQuantity) || transferQuantity <= 0) {
+            alert("Please enter a valid quantity.");
+            return;
+        }
+
+        // Simulate transfer processing
+        alert(`Transfer initiated:
+        - Item: ${itemName}
+        - Quantity: ${transferQuantity}
+        - From: ${currentLocation}
+        - To: ${availableLocations[locationIndex]}
+        - Transfer ID: TRF-${Math.random().toString(36).substr(2, 9)}`);
+    }
+
+    // Update the servers data structure to include HOW TO category
+    servers.forEach(server => {
+        server.categories.push({
+            name: 'HOW TO',
+            channels: [
+                { name: 'welcome', icon: '👋' },
+                { name: 'ubif-881-pos-login', icon: '🔑' },
+                { name: 'promotional-codes', icon: '🏷️' },
+                { name: '3-stage-repair', icon: '🔧' },
+                { name: 'rma-procedure', icon: '📦' },
+                { name: 'insurance-warranty', icon: '📄' },
+                { name: 'suspended-work-orders', icon: '���️' },
+                { name: 'gd-oqc-exception', icon: '⚠️' },
+                { name: 'gspn-certificate', icon: '📜' },
+                { name: 'process-buybacks', icon: '💰' },
+                { name: 'inventory-receiving', icon: '📦' },
+                { name: 'outsourced-parts', icon: '🔍' },
+                { name: 'rma-voicecomm', icon: '📱' },
+                { name: 'customer-updates', icon: '👥' },
+                { name: 'special-part-order', icon: '🎯' },
+                { name: 'notepad-app', icon: '📝' },
+                { name: 'appointment-management', icon: '📅' }
+            ]
+        });
+
+        // Add welcome message to HOW TO category
+        server.messages['welcome'] = [{
+            text: `Welcome to the HOW TO section! 👋
+
+This category contains comprehensive guides and procedures for various tasks at UBIF #881. Here you'll find:
+
+📚 Step-by-step guides
+🔧 Technical procedures
+💼 Administrative processes
+📱 Repair documentation
+
+Browse through the channels on the left to find specific guides. Each guide is regularly updated to ensure accuracy.
+
+Need help finding something specific? Ask in the #general channel!
+
+Remember: These guides are essential resources for maintaining consistent quality across all our services.`,
+            user: { name: 'System', avatar: '🤖', role: 'Bot' },
+            time: 'Pinned Message'
+        }];
+    });
+
+    function openHowTo() {
+        // Find the HOW TO category in current server
+        const howToCategory = currentServer.categories.find(cat => cat.name === 'HOW TO');
+        if (howToCategory) {
+            // Switch to welcome channel
+            currentChannel = 'welcome';
+            document.querySelector('.chat-header h2').textContent = '# welcome';
+            renderChannels();
+            renderMessages();
+            
+            // Expand the HOW TO category if it's collapsed
+            const categoryHeaders = document.querySelectorAll('.category-header');
+            categoryHeaders.forEach(header => {
+                if (header.textContent.includes('HOW TO')) {
+                    header.classList.remove('collapsed');
+                }
+            });
+        }
+    }
+
+    // Message Action Functions
+    function toggleMessageActions(button, event) {
+        // Prevent the document click handler from immediately closing the menu
+        if (event) {
+            event.stopPropagation();
+        }
+        
+        const menu = button.nextElementSibling;
+        document.querySelectorAll('.message-actions-menu.active').forEach(m => {
+            if (m !== menu) m.classList.remove('active');
+        });
+        menu.classList.toggle('active');
+    }
+
+    function replyToMessage(messageId) {
+        const message = document.getElementById(messageId);
+        const originalText = message.querySelector('p').textContent;
+        const originalUser = message.querySelector('.message-header strong').textContent;
+        
+        // Remove any existing reply indicator
+        removeReplyIndicator();
+        
+        // Create reply indicator
+        const replyIndicator = document.createElement('div');
+        replyIndicator.className = 'reply-indicator';
+        replyIndicator.innerHTML = `
+            <i class="fas fa-reply"></i>
+            <span>Replying to ${originalUser}</span>
+            <i class="fas fa-times cancel-reply" onclick="removeReplyIndicator()"></i>
+        `;
+        
+        // Store reply data
+        messageInput.dataset.replyTo = JSON.stringify({
+            id: messageId,
+            text: originalText,
+            user: originalUser
+        });
+        
+        // Add reply indicator before message input
+        const messageInputContainer = document.querySelector('.message-input');
+        messageInputContainer.insertBefore(replyIndicator, messageInput);
+        
+        // Focus input
+        messageInput.focus();
+    }
+
+    function removeReplyIndicator() {
+        const replyIndicator = document.querySelector('.reply-indicator');
+        if (replyIndicator) {
+            replyIndicator.remove();
+        }
+        delete messageInput.dataset.replyTo;
+    }
+
+    function forwardMessage(messageId) {
+        const message = document.getElementById(messageId);
+        const text = message.querySelector('p').textContent;
+        
+        // Create forward modal
+        const modal = document.createElement('div');
+        modal.className = 'forward-modal';
+        modal.innerHTML = `
+            <div class="forward-content">
+                <h3>Forward Message</h3>
+                <div class="forward-preview">
+                    <strong>Message:</strong>
+                    <p>${text}</p>
+                </div>
+                <div class="forward-options">
+                    <select id="forwardServer">
+                        ${servers.map(server => `
+                            <option value="${server.id}">${server.name}</option>
+                        `).join('')}
+                    </select>
+                    <select id="forwardCategory">
+                        <option value="">Select Category</option>
+                    </select>
+                    <select id="forwardChannel">
+                        <option value="">Select Channel</option>
+                    </select>
+                </div>
+                <div class="forward-actions">
+                    <button onclick="closeForwardModal()">Cancel</button>
+                    <button onclick="sendForward('${messageId}')">Forward</button>
+                </div>
+            </div>
+        `;
+        
+        document.body.appendChild(modal);
+        
+        // Add event listeners for cascading dropdowns
+        document.getElementById('forwardServer').addEventListener('change', updateForwardCategories);
+        document.getElementById('forwardCategory').addEventListener('change', updateForwardChannels);
+    }
+
+    function closeForwardModal() {
+        document.querySelector('.forward-modal').remove();
+    }
+
+    function updateForwardCategories() {
+        const serverId = document.getElementById('forwardServer').value;
+        const server = servers.find(s => s.id === parseInt(serverId));
+        const categorySelect = document.getElementById('forwardCategory');
+        
+        categorySelect.innerHTML = `
+            <option value="">Select Category</option>
+            ${server.categories.map(cat => `
+                <option value="${cat.name}">${cat.name}</option>
+            `).join('')}
+        `;
+    }
+
+    function updateForwardChannels() {
+        const serverId = document.getElementById('forwardServer').value;
+        const categoryName = document.getElementById('forwardCategory').value;
+        const server = servers.find(s => s.id === parseInt(serverId));
+        const category = server.categories.find(c => c.name === categoryName);
+        const channelSelect = document.getElementById('forwardChannel');
+        
+        channelSelect.innerHTML = `
+            <option value="">Select Channel</option>
+            ${category ? category.channels.map(chan => `
+                <option value="${chan.name}">${chan.name}</option>
+            `).join('') : ''}
+        `;
+    }
+
+    function sendForward(messageId) {
+        const message = document.getElementById(messageId);
+        const text = message.querySelector('p').textContent;
+        const serverId = document.getElementById('forwardServer').value;
+        const channelName = document.getElementById('forwardChannel').value;
+        
+        if (!channelName) {
+            alert('Please select a channel');
+            return;
+        }
+        
+        // Create forwarded message
+        const server = servers.find(s => s.id === parseInt(serverId));
+        server.messages[channelName] = server.messages[channelName] || [];
+        server.messages[channelName].push({
+            text: `Forwarded message:\n${text}`,
+            user: { name: 'You', avatar: '👤' },
+            time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
+        });
+        
+        closeForwardModal();
+        alert('Message forwarded successfully!');
+    }
+
+    // Handle URL parameters for direct message links
+    window.addEventListener('load', () => {
+        const params = new URLSearchParams(window.location.search);
+        const messageId = params.get('msg');
+        if (messageId) {
+            const message = document.getElementById(messageId);
+            if (message) {
+                message.classList.add('highlighted');
+                message.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
+    });
+
+    function copyMessageLink(messageId) {
+        const currentServer = servers.find(s => s.id === currentServerId);
+        const serverName = currentServer.name;
+        const categoryName = currentServer.categories.find(cat => 
+            cat.channels.some(ch => ch.name === currentChannel)
+        ).name;
+        
+        // Create a link that includes server, category, channel, and message info
+        const link = `${window.location.origin}${window.location.pathname}?server=${currentServerId}&category=${encodeURIComponent(categoryName)}&channel=${currentChannel}&msg=${messageId}`;
+        
+        navigator.clipboard.writeText(link);
+        
+        // Show feedback
+        const feedback = document.createElement('div');
+        feedback.className = 'copy-feedback';
+        feedback.textContent = 'Message link copied to clipboard!';
+        document.body.appendChild(feedback);
+        setTimeout(() => feedback.remove(), 2000);
+    }
+
+    function pinMessage(messageId) {
+        const message = document.getElementById(messageId);
+        const isPinned = message.getAttribute('data-pinned') === 'true';
+        const messageTime = message.querySelector('.message-time');
+        
+        if (isPinned) {
+            message.removeAttribute('data-pinned');
+            message.style.order = '0';
+            messageTime.textContent = messageTime.textContent.replace('Pinned Message', 
+                new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}));
+        } else {
+            message.setAttribute('data-pinned', 'true');
+            message.style.order = '-1';
+            messageTime.textContent = 'Pinned Message';
+            
+            // Move message to top of container
+            const messageContainer = message.parentElement;
+            messageContainer.insertBefore(message, messageContainer.firstChild);
+        }
+    }
+
+    // Add this to your server initialization
+    const guideLinks = {
+        'ubif-881-pos-login': {
+            title: 'UBIF #881 - Logging into POS',
+            link: 'https://drive.google.com/file/d/14tOjjzgLM9_MBsLJKvShDXanCAuSObsJ/view?usp=sharing'
+        },
+        'promotional-codes': {
+            title: 'How To Enter Promotional Codes at Checkout',
+            link: 'https://drive.google.com/file/d/1IMGigf9XzYRUO1e_KQq4KxOnjgfwQfSk/view?usp=sharing'
+        },
+        '3-stage-repair': {
+            title: '3 Stage - Device Repair Process',
+            link: 'https://drive.google.com/file/d/1XGssgLWOQG7-1G-pz8CyuMXOxMmydmx4/view?usp=sharing'
+        },
+        'rma-procedure': {
+            title: 'RMA/Pullback Procedure',
+            link: 'https://drive.google.com/file/d/1mbU4sS2BOI_EPGaFBPsbUc41J5RMa6Xs/view?usp=sharing'
+        },
+        'insurance-warranty': {
+            title: 'Finding an Insurance Claim or In-Warranty Lead (POS)',
+            link: 'https://drive.google.com/file/d/158cSc_Jqc8WdAgCZHxz_GssK6QsDeHaR/view?usp=sharing'
+        },
+        'suspended-work-orders': {
+            title: 'Resuming Suspended Work Orders - Quotes (POS)',
+            link: 'https://drive.google.com/file/d/1dqaJ27LM5stp7u-0M-3WTtjeziycQJX7/view?usp=sharing'
+        },
+        'gd-oqc-exception': {
+            title: 'UBIF #881 - Submit GD OQC Exception',
+            link: 'https://drive.google.com/file/d/1QbpNWnzIOZYELghguOuf2vCaWGImUYzE/view?usp=sharing'
+        },
+        'gspn-certificate': {
+            title: 'GSPN - Submitting a Level S2+ Certificate Renewal',
+            link: 'https://drive.google.com/file/d/1FwYj-1q1Oqwt-MujBTCW6FmRm-S7LjC6/view?usp=sharing'
+        },
+        'process-buybacks': {
+            title: 'How To Process BuyBacks',
+            link: 'https://drive.google.com/file/d/1hPJJ8dAuTyrvJgE_zPoNiiHh7uTEFvLG/view?usp=sharing'
+        },
+        'inventory-receiving': {
+            title: 'Receiving Inventory UBIF Distro Purchase',
+            link: 'https://drive.google.com/file/d/1YllT33eI8yCzgZvMUIfxGf41yybGKcXt/view?usp=sharing'
+        },
+        'outsourced-parts': {
+            title: 'Adding Outsourced Parts to Inventory',
+            link: 'https://drive.google.com/file/d/1sJpVJ10ka5y1YQKpPDjYO-mhydHHXK5B/view?usp=sharing'
+        },
+        'rma-voicecomm': {
+            title: 'RMA VoiceComm Guide',
+            link: 'https://drive.google.com/file/d/11ptjsN_eHjxkItEQTBjChetnEASeI_Gh/view?usp=sharing'
+        },
+        'customer-updates': {
+            title: 'Customer Updates & Appointment Management',
+            link: 'https://drive.google.com/file/d/1OXqJCdbIplENolqQIM0r_FBjOW5vtomn/view?usp=sharing'
+        },
+        'special-part-order': {
+            title: 'Special Part Order via JIRA',
+            link: 'https://drive.google.com/file/d/1NUb-pDT1hrZ0FkiJLxNisQgUE196OWED/view?usp=sharing'
+        },
+        'notepad-app': {
+            title: 'How to Utilize the GVTech Hub Notepad App',
+            link: 'https://drive.google.com/file/d/1iAfOgzyPhEfEY6iS6M-P8FRB-FhdkFcB/view?usp=sharing'
+        },
+        'appointment-management': {
+            title: 'UBIF 881 - Customer Updates & Appointment Management',
+            link: 'https://drive.google.com/file/d/1OXqJCdbIplENolqQIM0r_FBjOW5vtomn/view?usp=sharing'
+        }
+    };
+
+    // Initialize the guides in each server
+    servers.forEach(server => {
+        Object.entries(guideLinks).forEach(([channelId, guide]) => {
+            if (!server.messages[channelId]) {
+                server.messages[channelId] = [];
+            }
+            
+            // Add pinned guide message
+            server.messages[channelId].unshift({
+                text: `${guide.title}\n[Click here to view guide](${guide.link})`,
+                user: { name: 'System', avatar: '📌', role: 'Bot' },
+                time: 'Pinned Message',
+                isPinned: true
+            });
+        });
+    });
+
+    // Update the URL handler to handle all parameters
+    window.addEventListener('load', () => {
+        const params = new URLSearchParams(window.location.search);
+        const serverId = params.get('server');
+        const categoryName = params.get('category');
+        const channelName = params.get('channel');
+        const messageId = params.get('msg');
+
+        if (serverId) {
+            // Switch to correct server
+            switchServer(parseInt(serverId));
+            
+            if (categoryName && channelName) {
+                // Switch to correct channel
+                currentChannel = channelName;
+                document.querySelector('.chat-header h2').textContent = `# ${channelName}`;
+                renderChannels();
+                
+                // Expand the correct category
+                const categoryHeaders = document.querySelectorAll('.category-header');
+                categoryHeaders.forEach(header => {
+                    if (header.textContent.includes(categoryName)) {
+                        header.classList.remove('collapsed');
+                    }
+                });
+            }
+            
+            // Render messages and highlight the specific message
+            renderMessages();
+            if (messageId) {
+                const message = document.getElementById(messageId);
+                if (message) {
+                    message.classList.add('highlighted');
+                    message.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            }
+        }
+    });
+
+    // Add click event listener to document
+    document.addEventListener('click', function(event) {
+        // Check if click is outside any message actions menu
+        if (!event.target.closest('.message-actions-button') && !event.target.closest('.message-actions-menu')) {
+            // Hide all active menus
+            document.querySelectorAll('.message-actions-menu.active').forEach(menu => {
+                menu.classList.remove('active');
+            });
+        }
+    });
+
+    </script>
+
+    <!-- Service Worker Registration for PWA -->
+    <script>
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+            navigator.serviceWorker.register('service-worker.js').then(function(registration) {
+                console.log('ServiceWorker registration successful with scope: ', registration.scope);
+            }, function(err) {
+                console.log('ServiceWorker registration failed: ', err);
+            });
+        });
+    }
+    </script>
+</body>
+</html>
