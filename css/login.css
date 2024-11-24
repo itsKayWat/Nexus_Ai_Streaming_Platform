@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Nexus AI Streaming Platform</title>
+    <link rel="stylesheet" href="signup.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="smart-navbar">
+        <div class="nav-logo">
+            <a href="index.html">
+                <img src="logo.png" alt="Nexus AI Logo" class="logo">
+                <span class="ai-badge">AI-Powered</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Login Container -->
+    <div class="signup-container">
+        <form class="signup-form" id="loginForm">
+            <div class="form-header">
+                <img src="logo.png" alt="Nexus AI Logo">
+                <h1>Welcome Back</h1>
+                <p>Continue your AI-powered streaming experience</p>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" required>
+                <i class="fas fa-envelope"></i>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" required>
+                <i class="fas fa-lock"></i>
+            </div>
+
+            <div class="form-options">
+                <label class="remember-me">
+                    <input type="checkbox" id="remember">
+                    Remember me
+                </label>
+                <a href="#" class="forgot-password">Forgot Password?</a>
+            </div>
+
+            <button type="submit" class="signup-button">
+                Login
+            </button>
+
+            <div class="social-signup">
+                <p>Or login with</p>
+                <div class="social-buttons">
+                    <button type="button" class="social-button">
+                        <i class="fab fa-google"></i>
+                        Google
+                    </button>
+                </div>
+            </div>
+
+            <div class="login-link">
+                Don't have an account? <a href="signup.html">Sign up</a>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Get form values
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const remember = document.getElementById('remember').checked;
+
+            // Here you would typically send the login request to your server
+            console.log('Login attempt:', { email, remember });
+
+            // Simulate successful login
+            window.location.href = 'index.html';
+        });
+    </script>
+    <script src="auth.js"></script>
+</body>
+</html> 
