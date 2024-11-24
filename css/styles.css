@@ -8,6 +8,7 @@
     --secondary-text-color: #B0B0B0;
     --border-color: #2E2E2E;
     --shadow-color: rgba(0, 0, 0, 0.5);
+    --nav-link-color: #007bff;  /* Blue color for navigation links */
 }
 
 /* Global Styles */
@@ -796,43 +797,87 @@ body, html {
     position: fixed;
     top: 0;
     left: 0;
-    width: 250px;
+    width: 300px;
     height: 100vh;
     background-color: var(--background-color);
-    padding-top: 4rem;
-    z-index: 999;
+    color: var(--text-color);
+    padding: 20px;
+    z-index: 1000;
+}
+
+.nav-header {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.nav-header .logo {
+    width: 200px;
+    height: auto;
+}
+
+.search-bar {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.search-bar input {
+    flex: 1;
+    padding: 8px;
+    background: #333;
+    border: none;
+    border-radius: 4px;
+    color: var(--text-color);
+}
+
+.search-bar button {
+    background: none;
+    border: none;
+    color: var(--text-color);
+    cursor: pointer;
+}
+
+.auth-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.login-btn, .signup-btn {
+    padding: 8px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.nav-menu h3 {
+    color: var(--text-color);
+    margin-bottom: 15px;
 }
 
 .nav-links {
     display: flex;
     flex-direction: column;
-    padding: 1rem;
-    gap: 0.5rem;
+    gap: 15px;
 }
 
-.nav-links a {
+.nav-link {
     display: flex;
     align-items: center;
-    gap: 1rem;
-    padding: 0.8rem 1rem;
-    color: var(--text-color);
+    gap: 10px;
+    color: var(--nav-link-color);
     text-decoration: none;
-    border-radius: 8px;
-    transition: background-color 0.3s;
+    font-size: 16px;
 }
 
-.nav-links a:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-}
-
-.nav-links a.active {
-    background: linear-gradient(90deg, var(--primary-color), var(--accent-color-2));
-}
-
-.nav-links i {
-    font-size: 1.2rem;
-    width: 24px;
+.nav-link i {
+    width: 20px;
     text-align: center;
+}
+
+.nav-link:hover {
+    text-decoration: underline;
 }
 
 /* Mobile responsiveness */
