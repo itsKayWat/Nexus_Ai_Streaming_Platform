@@ -1,0 +1,131 @@
+/* Hamburger Menu Button */
+.hamburger-menu {
+    background: transparent;
+    border: none;
+    color: var(--text-color);
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 10px;
+    margin-right: 15px;
+    transition: transform 0.3s ease;
+}
+
+.hamburger-menu:hover {
+    transform: scale(1.1);
+}
+
+/* Side Navigation */
+.side-nav {
+    position: fixed;
+    top: 0;
+    left: -300px;
+    width: 300px;
+    height: 100vh;
+    background-color: var(--background-color);
+    border-right: 1px solid var(--border-color);
+    transition: left 0.3s ease;
+    z-index: 1000;
+    overflow-y: auto;
+}
+
+.side-nav.active {
+    left: 0;
+}
+
+.side-nav-content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.side-nav-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.side-nav-header .logo {
+    height: 40px;
+    width: auto;
+}
+
+.close-nav {
+    background: transparent;
+    border: none;
+    color: var(--text-color);
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 5px;
+    transition: transform 0.3s ease;
+}
+
+.close-nav:hover {
+    transform: scale(1.1);
+}
+
+/* Navigation Links */
+.nav-links {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.nav-links a {
+    color: var(--text-color);
+    text-decoration: none;
+    padding: 12px 15px;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.nav-links a:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.nav-links a.active {
+    background: linear-gradient(90deg, var(--primary-color), var(--accent-color-2));
+}
+
+/* Overlay */
+.side-nav-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(3px);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    z-index: 999;
+}
+
+.side-nav-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Update existing navbar styles */
+.smart-navbar {
+    display: flex;
+    align-items: center;
+    padding: 15px 20px;
+    background-color: var(--background-color);
+    border-bottom: 1px solid var(--border-color);
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 998;
+}
+
+/* Ensure main content is pushed down */
+main {
+    margin-top: 70px;
+} 
