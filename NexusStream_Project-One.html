@@ -1,0 +1,2012 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NexusStream - AI-Powered Live Streaming</title>
+    <!-- External Stylesheets -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="c:\Users\xlkay\Downloads\NexusStream_Project_Logo.png" type="image/png">
+    <link rel="apple-touch-icon" href="c:\Users\xlkay\Downloads\NexusStream_Project_Logo.png">
+    <link rel="shortcut icon" href="c:\Users\xlkay\Downloads\NexusStream_Project_Logo.png">
+    
+    <!-- Inlined CSS -->
+    <style>
+        /* Root Variables for Color Scheme */
+        :root {
+            --background-color: #1A1A2E;
+            --primary-color: #00A8E8;
+            --accent-color-1: #00FF85;
+            --accent-color-2: #9D00FF;
+            --text-color: #E0E0E0;
+            --secondary-text-color: #B0B0B0;
+            --border-color: #2E2E2E;
+            --shadow-color: rgba(0, 0, 0, 0.5);
+        }
+
+        /* Global Styles */
+        body.dark-mode {
+            background-color: var(--background-color);
+            color: var(--text-color);
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        a {
+            color: var(--primary-color);
+            text-decoration: none;
+            position: relative;
+        }
+
+        a:hover {
+            color: var(--accent-color-1);
+        }
+
+        a::after {
+            content: '';
+            display: block;
+            width: 0;
+            height: 2px;
+            background: var(--accent-color-1);
+            transition: width 0.3s;
+            position: absolute;
+            left: 0;
+            bottom: -4px;
+        }
+
+        a:hover::after {
+            width: 100%;
+        }
+
+        /* Focus States for Accessibility */
+        button:focus, a:focus, input:focus {
+            outline: 2px dashed var(--accent-color-1);
+            outline-offset: 4px;
+        }
+
+        /* Header Navigation */
+        .smart-navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background-color: var(--background-color);
+            border-bottom: 1px solid var(--border-color);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        /* Left section */
+        .nav-left {
+            flex: 1;
+            display: flex;
+            align-items: center;
+        }
+
+        /* Center section */
+        .nav-logo {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Right section */
+        .nav-right {
+            flex: 1;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .logo {
+            width: 50px;
+            height: auto;
+            margin-right: 10px;
+        }
+
+        .ai-badge {
+            background-color: var(--accent-color-2);
+            color: #fff;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .hamburger-menu {
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-size: 1.5rem;
+            cursor: pointer;
+            display: none;
+        }
+
+        .nav-links {
+            display: none;
+        }
+
+        .ai-recommended {
+            background-color: var(--accent-color-1);
+            color: var(--background-color);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            margin-left: 5px;
+        }
+
+        .smart-search {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            max-width: 600px;
+        }
+
+        .smart-search input {
+            flex: 1;
+            min-width: 200px;
+            padding: 10px 14px;
+            border: none;
+            border-radius: 8px;
+            background-color: var(--border-color);
+            color: var(--text-color);
+            width: 250px;
+            transition: width 0.3s;
+        }
+
+        .smart-search input:focus {
+            width: 300px;
+        }
+
+        .voice-search, .ai-search {
+            background: none;
+            border: none;
+            color: var(--primary-color);
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .voice-search:hover, .ai-search:hover {
+            color: var(--accent-color-1);
+        }
+
+        .nav-auth {
+            display: flex;
+            gap: 10px;
+        }
+
+        .login-btn, .signup-btn {
+            background: linear-gradient(145deg, var(--primary-color), var(--accent-color-2));
+            border: none;
+            border-radius: 8px;
+            color: #FFFFFF;
+            padding: 10px 20px;
+            font-size: 1rem;
+            cursor: pointer;
+            box-shadow: 5px 5px 10px var(--shadow-color), -5px -5px 10px var(--border-color);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .login-btn:hover, .signup-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 7px 7px 14px var(--shadow-color), -7px -7px 14px var(--border-color);
+        }
+
+        .login-btn:active, .signup-btn:active {
+            transform: translateY(0);
+            box-shadow: 5px 5px 10px var(--shadow-color), -5px -5px 10px var(--border-color);
+        }
+
+        /* Responsive Navigation */
+        @media (max-width: 768px) {
+            .hamburger-menu {
+                display: block;
+            }
+
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                background-color: var(--background-color);
+                position: absolute;
+                top: 60px;
+                right: 20px;
+                padding: 20px;
+                border: 1px solid var(--border-color);
+                border-radius: 8px;
+                gap: 15px;
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .smart-search {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .smart-search input {
+                width: 100%;
+            }
+        }
+
+        /* Side Navigation Styles */
+        .side-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 300px;
+            height: 100vh;
+            background-color: var(--background-color);
+            border-right: 1px solid var(--border-color);
+            z-index: 999;
+            padding-top: 60px; /* To account for navbar */
+            overflow-y: auto;
+            scrollbar-width: none;
+            transition: transform 0.3s ease;
+        }
+
+        .side-nav::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Main content adjustment */
+        .adaptive-layout {
+            margin-left: 300px;
+            transition: margin-left 0.3s ease;
+            padding: 20px;
+        }
+
+        .adaptive-layout.expanded {
+            margin-left: 0;
+        }
+
+        /* Navigation Links */
+        .nav-links {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .nav-links a {
+            color: var(--text-color);
+            text-decoration: none;
+            padding: 12px 15px;
+            border-radius: 8px;
+            transition: background-color 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.95rem;
+        }
+
+        .nav-links a i {
+            width: 20px;
+            text-align: center;
+            font-size: 1.1rem;
+            opacity: 0.8;
+        }
+
+        .nav-links a:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-links a.active {
+            background: linear-gradient(90deg, var(--primary-color), var(--accent-color-2));
+            font-weight: 500;
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            .side-nav {
+                transform: translateX(-300px);
+            }
+            
+            .adaptive-layout {
+                margin-left: 0;
+                max-width: 100%;
+            }
+            
+            .side-nav.active {
+                transform: translateX(0);
+            }
+        }
+
+        /* Main Content Layout */
+        .adaptive-layout {
+            margin-left: 300px;
+            padding-top: 70px; /* To account for fixed navbar */
+            padding: 20px;
+            transition: margin-left 0.3s ease;
+        }
+
+        /* Primary Stream Section */
+        .primary-stream {
+            width: 100%;
+            max-width: 100%;
+        }
+
+        .adaptive-player {
+            position: relative;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px var(--shadow-color);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .adaptive-player:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px var(--shadow-color);
+        }
+
+        .smart-video {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .ai-enhancements {
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            background-color: var(--border-color);
+        }
+
+        .ai-enhancements button {
+            background: linear-gradient(145deg, var(--primary-color), var(--accent-color-2));
+            border: none;
+            border-radius: 8px;
+            color: #FFFFFF;
+            padding: 8px 16px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            box-shadow: 3px 3px 6px var(--shadow-color), -3px -3px 6px var(--border-color);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .ai-enhancements button:hover {
+            transform: translateY(-2px);
+            box-shadow: 5px 5px 10px var(--shadow-color), -5px -5px 10px var(--border-color);
+        }
+
+        .stream-analytics {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: var(--border-color);
+            border-radius: 10px;
+            box-shadow: 0 4px 6px var(--shadow-color);
+        }
+
+        .stream-analytics h4 {
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+
+        .engagement-metrics {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .engagement-metrics span {
+            font-size: 1rem;
+            color: var(--secondary-text-color);
+        }
+
+        /* AI-Curated Recommendations */
+        .smart-recommendations {
+            margin-top: 40px;
+        }
+
+        .smart-recommendations h3 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .ai-icon {
+            color: var(--accent-color-2);
+        }
+
+        .dynamic-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            width: 100%;
+            padding: 20px;
+        }
+
+        .content-card {
+            width: 100%;
+            background: var(--background-color);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px var(--shadow-color);
+            transition: transform 0.3s ease;
+        }
+
+        .content-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .thumbnail-container {
+            position: relative;
+            width: 100%;
+            padding-top: 56.25%; /* 16:9 Aspect Ratio */
+            background: var(--background-color);
+            overflow: hidden;
+        }
+
+        .stream-thumbnail,
+        .stream-video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Live Indicator Styling */
+        .live-indicator {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(255, 0, 0, 0.8);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            z-index: 3;
+        }
+
+        .live-dot {
+            width: 8px;
+            height: 8px;
+            background: red;
+            border-radius: 50%;
+            animation: pulse 1.5s infinite;
+        }
+
+        .viewer-count {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            z-index: 3;
+        }
+
+        .stream-duration {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            z-index: 3;
+        }
+
+        .content-details {
+            padding: 15px;
+        }
+
+        .streamer-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 10px 0;
+        }
+
+        .streamer-avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .streamer-name {
+            color: var(--primary-color);
+            font-weight: 500;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.2);
+                opacity: 0.7;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        /* Hover effect for video preview */
+        .content-card:hover .stream-video {
+            opacity: 1;
+        }
+
+        .content-card:hover .stream-thumbnail {
+            opacity: 0;
+        }
+
+        /* AI Features Section */
+        .ai-hub {
+            margin-top: 60px;
+            padding: 40px 20px;
+            background-color: var(--border-color);
+            border-radius: 10px;
+            box-shadow: 0 4px 6px var(--shadow-color);
+        }
+
+        .ai-hub h3 {
+            font-size: 1.8rem;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .ai-features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .ai-feature {
+            background-color: var(--background-color);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 6px var(--shadow-color);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .ai-feature:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px var(--shadow-color);
+        }
+
+        .ai-feature i {
+            font-size: 2rem;
+            color: var(--accent-color-2);
+            margin-bottom: 15px;
+        }
+
+        .ai-feature h4 {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+
+        .ai-feature p {
+            font-size: 0.95rem;
+            color: var(--secondary-text-color);
+        }
+
+        /* Revenue Optimization Tools Section */
+        .revenue-tools {
+            margin-top: 60px;
+        }
+
+        .revenue-tools h3 {
+            font-size: 1.8rem;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .donation-optimizer, .ads-management {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .donation-optimizer button, .ads-management button {
+            background: linear-gradient(145deg, var(--primary-color), var(--accent-color-2));
+            border: none;
+            border-radius: 8px;
+            color: #FFFFFF;
+            padding: 12px 24px;
+            font-size: 1rem;
+            cursor: pointer;
+            box-shadow: 5px 5px 10px var(--shadow-color), -5px -5px 10px var(--border-color);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .donation-optimizer button:hover, .ads-management button:hover {
+            transform: translateY(-3px);
+            box-shadow: 7px 7px 14px var(--shadow-color), -7px -7px 14px var(--border-color);
+        }
+
+        .revenue-insights, .ad-performance {
+            font-size: 1rem;
+            color: var(--secondary-text-color);
+        }
+
+        /* Floating Action Menu */
+        .floating-menu {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            z-index: 1000;
+        }
+
+        .floating-action-button {
+            background: var(--primary-color);
+            border: none;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            color: #fff;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 4px 8px var(--shadow-color);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .floating-action-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 16px var(--shadow-color);
+        }
+
+        /* AI Chat Interface */
+        .ai-chat-interface {
+            display: none;
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            width: 300px;
+            max-width: 90%;
+            background-color: var(--background-color);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            box-shadow: 0 4px 12px var(--shadow-color);
+            z-index: 1000;
+            flex-direction: column;
+            animation: slideIn 0.3s forwards;
+        }
+
+        .ai-chat-interface.open {
+            display: flex;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .chat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background-color: var(--accent-color-2);
+            color: #fff;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+        }
+
+        .close-chat {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            background-color: var(--border-color);
+        }
+
+        .chat-input {
+            display: flex;
+            padding: 10px 15px;
+            background-color: var(--background-color);
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+        }
+
+        .chat-input input {
+            flex: 1;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 8px;
+            background-color: var(--border-color);
+            color: var(--text-color);
+        }
+
+        .chat-input button {
+            background: var(--primary-color);
+            border: none;
+            border-radius: 50%;
+            color: #fff;
+            padding: 8px;
+            margin-left: 10px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .chat-input button:hover {
+            background: var(--accent-color-1);
+        }
+
+        /* Smart Notification Center */
+        .smart-notifications {
+            position: fixed;
+            top: 80px;
+            right: 30px;
+            width: 300px;
+            max-width: 90%;
+            background-color: var(--background-color);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            box-shadow: 0 4px 12px var(--shadow-color);
+            padding: 20px;
+            z-index: 1000;
+            display: none;
+            flex-direction: column;
+            animation: fadeIn 0.3s forwards;
+        }
+
+        .smart-notifications.active {
+            display: flex;
+        }
+
+        .notification-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .notification-header h4 {
+            margin: 0;
+        }
+
+        .clear-notifications {
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+
+        .notification-list p {
+            color: var(--secondary-text-color);
+            text-align: center;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Smart Footer */
+        .ai-footer {
+            background-color: var(--background-color);
+            color: var(--text-color);
+            padding: 40px 20px;
+            border-top: 1px solid var(--border-color);
+            margin-top: 60px;
+        }
+
+        .footer-intelligence {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .platform-stats span {
+            display: block;
+            font-size: 1rem;
+            color: var(--secondary-text-color);
+            margin-bottom: 5px;
+        }
+
+        .footer-settings .settings-toggle {
+            background: var(--primary-color);
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            padding: 10px 20px;
+            font-size: 1rem;
+            cursor: pointer;
+            box-shadow: 5px 5px 10px var(--shadow-color), -5px -5px 10px var(--border-color);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .footer-settings .settings-toggle:hover {
+            transform: translateY(-3px);
+            box-shadow: 7px 7px 14px var(--shadow-color), -7px -7px 14px var(--border-color);
+        }
+
+        .footer-content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: space-between;
+        }
+
+        .footer-section {
+            flex: 1 1 200px;
+        }
+
+        .footer-section h4 {
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+
+        .footer-section a {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+            color: var(--text-color);
+            position: relative;
+        }
+
+        .footer-section a:hover {
+            color: var(--accent-color-1);
+        }
+
+        .footer-section a::after {
+            content: '';
+            display: block;
+            width: 0;
+            height: 2px;
+            background: var(--accent-color-1);
+            transition: width 0.3s;
+            position: absolute;
+            left: 0;
+            bottom: -4px;
+        }
+
+        .footer-section a:hover::after {
+            width: 100%;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed;
+            z-index: 1500;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.7);
+            animation: fadeIn 0.3s forwards;
+        }
+
+        .modal-content {
+            background-color: var(--background-color);
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid var(--primary-color);
+            width: 90%;
+            max-width: 500px;
+            border-radius: 10px;
+            position: relative;
+            box-shadow: 0 5px 15px var(--shadow-color);
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Loader Styles */
+        .loader {
+            display: none; /* Hidden by default */
+            border: 8px solid #f3f3f3;
+            border-top: 8px solid var(--primary-color);
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 2000;
+        }
+
+        .loader.active {
+            display: block;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Button Styles */
+        button {
+            font-family: inherit;
+            font-size: inherit;
+        }
+
+        button:focus {
+            outline: none;
+        }
+
+        /* Smooth Transitions */
+        * {
+            box-sizing: border-box;
+        }
+
+        body, html {
+            scroll-behavior: smooth;
+        }
+
+        /* Additional Responsive Adjustments */
+        @media (max-width: 480px) {
+            .smart-search input {
+                width: 100%;
+            }
+
+            .floating-action-button {
+                width: 50px;
+                height: 50px;
+                font-size: 1.2rem;
+            }
+
+            .chat-header, .chat-input {
+                padding: 10px;
+            }
+
+            .chat-input input {
+                padding: 6px 10px;
+            }
+
+            .chat-input button {
+                padding: 6px;
+            }
+
+            .ai-footer {
+                padding: 30px 10px;
+            }
+
+            .footer-content {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+
+        /* Signup and Login Modal Forms */
+        .modal-form {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 30px;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .form-header img {
+            width: 120px;
+            height: auto;
+            margin-bottom: 20px;
+        }
+
+        .form-header h1 {
+            font-size: 1.8rem;
+            color: var(--text-color);
+            margin-bottom: 10px;
+        }
+
+        .form-header p {
+            color: var(--secondary-text-color);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-color);
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 40px 12px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-color);
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(0, 168, 232, 0.2);
+        }
+
+        .form-group input:hover {
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .form-group i {
+            position: absolute;
+            right: 15px;
+            top: 38px;
+            color: var(--secondary-text-color);
+        }
+
+        .password-requirements {
+            font-size: 0.85rem;
+            color: var(--secondary-text-color);
+            margin-top: 8px;
+        }
+
+        .modal-button {
+            background: linear-gradient(145deg, var(--primary-color), var(--accent-color-2));
+            border: none;
+            border-radius: 8px;
+            color: #FFFFFF;
+            padding: 12px 20px;
+            width: 100%;
+            font-size: 0.9rem;
+            cursor: pointer;
+            box-shadow: 3px 3px 6px var(--shadow-color), -3px -3px 6px var(--border-color);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .modal-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 5px 5px 10px var(--shadow-color), -5px -5px 10px var(--border-color);
+        }
+
+        .social-signup, .social-login {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .social-signup p, .social-login p {
+            color: var(--secondary-text-color);
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        .social-signup p::before,
+        .social-signup p::after,
+        .social-login p::before,
+        .social-login p::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 100px;
+            height: 1px;
+            background: var(--border-color);
+        }
+
+        .social-signup p::before, .social-login p::before {
+            right: 65%;
+        }
+
+        .social-signup p::after, .social-login p::after {
+            left: 65%;
+        }
+
+        .social-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .social-button {
+            padding: 10px 20px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .social-button:hover {
+            background-color: var(--border-color);
+            transform: translateY(-2px);
+        }
+
+        .signup-link, .login-link {
+            text-align: center;
+            margin-top: 15px;
+            color: var(--secondary-text-color);
+        }
+
+        .signup-link a, .login-link a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .signup-link a:hover, .login-link a:hover {
+            color: var(--accent-color-1);
+        }
+
+        /* GitHub Button Styles */
+        .github-button {
+            margin-left: 15px;
+            padding: 8px 15px;
+            background: linear-gradient(145deg, var(--primary-color), var(--accent-color-2));
+            border-radius: 8px;
+            color: #FFFFFF;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .github-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px var(--shadow-color);
+        }
+
+        /* Add these new styles */
+        .ai-match-indicator {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            z-index: 3;
+            backdrop-filter: blur(4px);
+            transition: transform 0.3s ease;
+        }
+
+        .ai-match-indicator:hover {
+            transform: scale(1.05);
+        }
+
+        .ai-match-indicator i {
+            font-size: 0.9rem;
+        }
+
+        .best-match {
+            background: rgba(0, 255, 133, 0.9);
+            color: var(--background-color);
+        }
+
+        .low-match {
+            background: rgba(255, 152, 0, 0.9);
+            color: var(--background-color);
+        }
+
+        /* Remove or comment out the old .ai-match style if it exists */
+    </style>
+</head>
+<body class="dark-mode">
+    <!-- Fixed Header Navigation -->
+    <header>
+        <nav class="smart-navbar">
+            <!-- Left side -->
+            <div class="nav-left">
+                <button class="hamburger-menu" aria-label="Toggle Navigation">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <a href="#" id="homeLinkSide" style="display: flex; align-items: center; margin-left: 15px;">
+                    <img src="https://lh3.googleusercontent.com/d/1JsyqGU6XM_FxPBN35Jbk1tr31Lmhfy6b" 
+                         alt="NexusStream Logo" 
+                         class="logo" 
+                         style="width: 50px; height: 50px; object-fit: contain;">
+                    <span style="
+                        color: var(--text-color); 
+                        font-size: 20px; 
+                        font-weight: bold; 
+                        margin-left: 10px; 
+                        margin-right: 10px;">NexusStream Project</span>
+                    <span class="ai-badge" style="margin-left: 10px;">AI-Powered</span>
+                </a>
+            </div>
+
+            <!-- Center -->
+            <div class="nav-logo">
+                <div class="smart-search">
+                    <input type="text" placeholder="Search..." aria-label="Search">
+                    <button class="voice-search" aria-label="Voice Search">
+                        <i class="fas fa-microphone"></i>
+                    </button>
+                    <button class="ai-search" aria-label="AI Search">
+                        <i class="fas fa-robot"></i>
+                    </button>
+                    <a href="https://github.com/GV-Tech-Hub/Nexus_Ai_Streaming_Platform.git" 
+                       class="github-button" 
+                       target="_blank" 
+                       rel="noopener noreferrer"
+                       style="
+                           margin-left: 15px;
+                           padding: 8px 15px;
+                           background: linear-gradient(145deg, var(--primary-color), var(--accent-color-2));
+                           border-radius: 8px;
+                           color: #FFFFFF;
+                           text-decoration: none;
+                           display: flex;
+                           align-items: center;
+                           gap: 8px;
+                           font-size: 0.9rem;
+                           transition: transform 0.2s, box-shadow 0.2s;">
+                        <i class="fab fa-github"></i>
+                        View on GitHub
+                    </a>
+                </div>
+            </div>
+
+            <!-- Right side -->
+            <div class="nav-right">
+                <div class="nav-auth">
+                    <button class="login-btn" id="openLoginModal">Login</button>
+                    <button class="signup-btn" id="openSignupModal">Sign Up</button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Side Navigation -->
+        <div class="side-nav" id="sideNav">
+            <div class="side-nav-header" style="margin-top: 80px; padding: 0 20px;">
+                <h3 style="
+                    font-size: 24px;
+                    margin-left: 15px;
+                    font-weight: bold;
+                    color: var(--text-color);
+                    text-align: left;
+                ">Menu</h3>
+            </div>
+            <div class="nav-links">
+                <a href="#" class="active" id="homeLinkSideNav">
+                    <i class="fas fa-home"></i>
+                    Home
+                </a>
+                <a href="#community">
+                    <i class="fas fa-users"></i>
+                    Community
+                </a>
+                <a href="#following">
+                    <i class="fas fa-heart"></i>
+                    Following
+                </a>
+                <a href="#events">
+                    <i class="fas fa-calendar"></i>
+                    Events
+                </a>
+                <a href="https://sites.google.com/view/nexusstreamproject/roadmap" 
+                   target="_blank" 
+                   rel="noopener noreferrer" 
+                   style="display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-road"></i>
+                    Roadmap <span class="ai-recommended">Phase 1</span>
+                </a>
+            </div>
+        </div>
+        <div class="side-nav-overlay" id="sideNavOverlay"></div>
+    </header>
+
+    <main class="adaptive-layout" id="mainContent">
+        <!-- Main Content Section -->
+        <section class="smart-content-grid">
+            <div class="primary-stream">
+                <div class="adaptive-player">
+                    <video controls class="smart-video" poster="thumbnail.jpg" preload="metadata" loading="lazy">
+                        <source src="stream.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                    <div class="ai-enhancements">
+                        <button class="ai-translate" aria-label="Auto-Translate">Auto-Translate</button>
+                        <button class="ai-transcript" aria-label="Live Transcript">Live Transcript</button>
+                        <button class="ai-highlights" aria-label="Smart Highlights">Smart Highlights</button>
+                        <button class="report-issue" aria-label="Report Issue">Report Issue</button>
+                    </div>
+                </div>
+                <div class="stream-analytics">
+                    <h4>Engagement Analytics</h4>
+                    <div class="engagement-metrics">
+                        <span class="sentiment-score" aria-label="Positive Engagement Score">Positive Engagement: 94%</span>
+                        <span class="peak-viewers" aria-label="Peak Viewers Count">Peak: 1.2K viewers</span>
+                        <span class="average-watch-time" aria-label="Average Watch Time">Average Watch Time: 10m 30s</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AI-Curated Recommendations -->
+            <section class="smart-recommendations">
+                <h3>Personalized For You <i class="fas fa-brain ai-icon" aria-hidden="true"></i></h3>
+                <div class="dynamic-grid">
+                    <!-- Card 1: Gaming Stream -->
+                    <div class="content-card" data-engagement="98">
+                        <div class="thumbnail-container">
+                            <div class="live-indicator">
+                                <span class="live-dot"></span>
+                                LIVE
+                            </div>
+                            <div class="ai-match-indicator best-match">
+                                <i class="fas fa-brain"></i>
+                                98% Best Match
+                            </div>
+                            <div class="viewer-count">
+                                <i class="fas fa-eye"></i>
+                                1.2K viewers
+                            </div>
+                            <div class="stream-duration">
+                                <i class="fas fa-clock"></i>
+                                2:45:30
+                            </div>
+                            <img src="https://i.imgur.com/ZLd2YnP.jpg" 
+                                 alt="Gaming Stream Preview" 
+                                 class="stream-thumbnail">
+                            <video class="stream-video" muted playsinline>
+                                <source src="https://assets.mixkit.co/videos/preview/mixkit-gaming-streamer-playing-on-his-computer-with-headphones-on-42620-large.mp4" 
+                                        type="video/mp4">
+                            </video>
+                        </div>
+                        <div class="content-details">
+                            <h4 class="content-title">Pro Gaming Stream</h4>
+                            <div class="streamer-info">
+                                <img src="https://i.imgur.com/user1.jpg" alt="Streamer Avatar" class="streamer-avatar">
+                                <span class="streamer-name">ProGamer_01</span>
+                            </div>
+                            <p>Apex Legends • English • Ranked Matches</p>
+                        </div>
+                    </div>
+
+                    <!-- Card 2: Art Stream -->
+                    <div class="content-card" data-engagement="95">
+                        <div class="thumbnail-container">
+                            <div class="live-indicator">
+                                <span class="live-dot"></span>
+                                LIVE
+                            </div>
+                            <div class="ai-match-indicator best-match">
+                                <i class="fas fa-brain"></i>
+                                95% Best Match
+                            </div>
+                            <div class="viewer-count">
+                                <i class="fas fa-eye"></i>
+                                856 viewers
+                            </div>
+                            <div class="stream-duration">
+                                <i class="fas fa-clock"></i>
+                                1:30:15
+                            </div>
+                            <img src="https://i.imgur.com/artStream.jpg" 
+                                 alt="Digital Art Stream Preview" 
+                                 class="stream-thumbnail">
+                            <video class="stream-video" muted playsinline>
+                                <source src="https://assets.mixkit.co/videos/preview/mixkit-digital-artist-working-on-tablet-1748-large.mp4" 
+                                        type="video/mp4">
+                            </video>
+                        </div>
+                        <div class="content-details">
+                            <h4 class="content-title">Digital Art Creation</h4>
+                            <div class="streamer-info">
+                                <img src="https://i.imgur.com/user2.jpg" alt="Artist Avatar" class="streamer-avatar">
+                                <span class="streamer-name">ArtisticSoul</span>
+                            </div>
+                            <p>Digital Art • Character Design • Commission Work</p>
+                        </div>
+                    </div>
+
+                    <!-- Card 3: Music Stream -->
+                    <div class="content-card" data-engagement="92">
+                        <div class="thumbnail-container">
+                            <div class="live-indicator">
+                                <span class="live-dot"></span>
+                                LIVE
+                            </div>
+                            <div class="ai-match-indicator best-match">
+                                <i class="fas fa-brain"></i>
+                                92% Best Match
+                            </div>
+                            <div class="viewer-count">
+                                <i class="fas fa-eye"></i>
+                                2.1K viewers
+                            </div>
+                            <div class="stream-duration">
+                                <i class="fas fa-clock"></i>
+                                0:45:20
+                            </div>
+                            <img src="https://i.imgur.com/musicStream.jpg" 
+                                 alt="Music Stream Preview" 
+                                 class="stream-thumbnail">
+                            <video class="stream-video" muted playsinline>
+                                <source src="https://assets.mixkit.co/videos/preview/mixkit-musician-playing-guitar-at-studio-2080-large.mp4" 
+                                        type="video/mp4">
+                            </video>
+                        </div>
+                        <div class="content-details">
+                            <h4 class="content-title">Live Music Session</h4>
+                            <div class="streamer-info">
+                                <img src="https://i.imgur.com/user3.jpg" alt="Musician Avatar" class="streamer-avatar">
+                                <span class="streamer-name">MusicMaster</span>
+                            </div>
+                            <p>Guitar • Live Performance • Song Requests</p>
+                        </div>
+                    </div>
+
+                    <!-- Card 4: Tech Stream -->
+                    <div class="content-card" data-engagement="43">
+                        <div class="thumbnail-container">
+                            <div class="live-indicator">
+                                <span class="live-dot"></span>
+                                LIVE
+                            </div>
+                            <div class="ai-match-indicator low-match">
+                                <i class="fas fa-brain"></i>
+                                43% Best Match
+                            </div>
+                            <div class="viewer-count">
+                                <i class="fas fa-eye"></i>
+                                945 viewers
+                            </div>
+                            <div class="stream-duration">
+                                <i class="fas fa-clock"></i>
+                                3:15:45
+                            </div>
+                            <img src="https://i.imgur.com/techStream.jpg" 
+                                 alt="Tech Stream Preview" 
+                                 class="stream-thumbnail">
+                            <video class="stream-video" muted playsinline>
+                                <source src="https://assets.mixkit.co/videos/preview/mixkit-programming-code-on-screen-2721-large.mp4" 
+                                        type="video/mp4">
+                            </video>
+                        </div>
+                        <div class="content-details">
+                            <h4 class="content-title">Tech Talk & Coding</h4>
+                            <div class="streamer-info">
+                                <img src="https://i.imgur.com/user4.jpg" alt="Tech Streamer Avatar" class="streamer-avatar">
+                                <span class="streamer-name">TechWizard</span>
+                            </div>
+                            <p>Programming • Web Dev • Tech Reviews</p>
+                        </div>
+                    </div>
+
+                    <!-- Card 5: IRL Stream -->
+                    <div class="content-card" data-engagement="88">
+                        <div class="thumbnail-container">
+                            <div class="live-indicator">
+                                <span class="live-dot"></span>
+                                LIVE
+                            </div>
+                            <div class="ai-match-indicator best-match">
+                                <i class="fas fa-brain"></i>
+                                88% Best Match
+                            </div>
+                            <div class="viewer-count">
+                                <i class="fas fa-eye"></i>
+                                1.5K viewers
+                            </div>
+                            <div class="stream-duration">
+                                <i class="fas fa-clock"></i>
+                                4:20:10
+                            </div>
+                            <img src="https://i.imgur.com/irlStream.jpg" 
+                                 alt="IRL Stream Preview" 
+                                 class="stream-thumbnail">
+                            <video class="stream-video" muted playsinline>
+                                <source src="https://assets.mixkit.co/videos/preview/mixkit-traveling-through-the-city-4464-large.mp4" 
+                                        type="video/mp4">
+                            </video>
+                        </div>
+                        <div class="content-details">
+                            <h4 class="content-title">Tokyo Travel Adventure</h4>
+                            <div class="streamer-info">
+                                <img src="https://i.imgur.com/user5.jpg" alt="IRL Streamer Avatar" class="streamer-avatar">
+                                <span class="streamer-name">Wanderlust_TV</span>
+                            </div>
+                            <p>IRL • Travel • Japan Exploration</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </section>
+
+        <!-- AI Features Section -->
+        <section class="ai-hub" id="aiFeatures">
+            <h3>AI-Powered Experience</h3>
+            <div class="ai-features-grid">
+                <div class="ai-feature">
+                    <i class="fas fa-brain"></i>
+                    <h4>Smart Content Discovery</h4>
+                    <p>Personalized recommendations using neural networks to enhance viewer experience.</p>
+                </div>
+                <div class="ai-feature">
+                    <i class="fas fa-language"></i>
+                    <h4>Universal Translation</h4>
+                    <p>Real-time translation in 95+ languages for global reach.</p>
+                </div>
+                <div class="ai-feature">
+                    <i class="fas fa-shield-alt"></i>
+                    <h4>Data Privacy Assurance</h4>
+                    <p>Your data is safeguarded with end-to-end encryption and robust security measures.</p>
+                </div>
+                <div class="ai-feature">
+                    <i class="fas fa-volume-up"></i>
+                    <h4>Customizable Audio Feedback</h4>
+                    <p>Choose from an extensive library of sound feedback or upload your own.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Revenue Optimization Tools Section -->
+        <section class="revenue-tools" id="revenueTools">
+            <h3>Optimize Your Experience</h3>
+            <div class="donation-optimizer">
+                <button class="smart-pricing" aria-label="Dynamic Pricing Optimization">Dynamic Pricing</button>
+                <button class="engagement-rewards" aria-label="Engagement Rewards">Smart Rewards</button>
+                <span class="revenue-insights" aria-label="Revenue Insights">Maximize Your Revenue Potential!</span>
+            </div>
+            <div class="ads-management">
+                <h4>Ad Placement Optimization</h4>
+                <button class="ad-analysis" aria-label="AI Ad Analysis">AI Ad Analysis</button>
+                <button class="targeting-tool" aria-label="Smart Targeting Tool">Smart Targeting</button>
+                <span class="ad-performance" aria-label="Ad Performance Status">Ad Performance: Excellent</span>
+            </div>
+        </section>
+    </main>
+
+    <!-- Floating Action Menu for Quick Access -->
+    <div class="floating-menu">
+        <button class="floating-action-button" id="aiAssistant" title="AI Assistant" aria-label="AI Assistant">
+            <i class="fas fa-robot"></i>
+        </button>
+        <button class="floating-action-button" id="streamHealth" title="View Stream Health" aria-label="View Stream Health">
+            <i class="fas fa-chart-line"></i>
+        </button>
+    </div>
+
+    <!-- AI Chat Interface -->
+    <div class="ai-chat-interface" id="aiChat" aria-hidden="true">
+        <div class="chat-header">
+            AI Stream Assistant
+            <button class="close-chat" aria-label="Close Chat">&times;</button>
+        </div>
+        <div class="chat-messages" id="chatMessages" aria-live="polite">
+            <!-- Dynamic messages will be added here -->
+        </div>
+        <div class="chat-input">
+            <input type="text" placeholder="Ask your AI assistant..." aria-label="Message input" required>
+            <button aria-label="Send Message" type="button">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Smart Notification Center -->
+    <aside class="smart-notifications" id="smartNotifications">
+        <div class="notification-header">
+            <h4>Notifications</h4>
+            <button class="clear-notifications" aria-label="Clear All Notifications">&times;</button>
+        </div>
+        <div class="notification-list">
+            <p>No new notifications.</p>
+        </div>
+    </aside>
+
+    <!-- Smart Footer -->
+    <footer class="ai-footer">
+        <div class="footer-intelligence">
+            <div class="platform-stats">
+                <span class="active-streams" aria-label="Live Streams Count">Live Streams: 1.2K</span>
+                <span class="platform-health" aria-label="Platform Operational Status">Platform Status: Optimal</span>
+                <span class="ai-processing" aria-label="AI Processing Status">AI Processing: Active</span>
+            </div>
+            <div class="footer-settings">
+                <button class="settings-toggle" aria-label="Settings Toggle">Settings <i class="fas fa-cog"></i></button>
+            </div>
+        </div>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>About Us</h4>
+                <a href="#" aria-label="Learn more about us">About</a>
+                <a href="#" aria-label="Read our blog">Blog</a>
+                <a href="#" aria-label="Join our team">Careers</a>
+                <a href="#" aria-label="Press inquiries">Press</a>
+                <a href="#" aria-label="Contact us for more information">Contact Us</a>
+            </div>
+            <div class="footer-section">
+                <h4>Support</h4>
+                <a href="#" aria-label="Visit Help Center for assistance">Help Center</a>
+                <a href="#" aria-label="Visit Safety Center for safety tips">Safety Center</a>
+                <a href="#" aria-label="Read our community guidelines">Community Guidelines</a>
+                <a href="#" aria-label="Report a problem">Report a Problem</a>
+            </div>
+            <div class="footer-section">
+                <h4>Legal</h4>
+                <a href="#" aria-label="Read our Terms of Service">Terms of Service</a>
+                <a href="#" aria-label="Review Privacy Policy">Privacy Policy</a>
+                <a href="#" aria-label="View Cookie Policy">Cookie Policy</a>
+                <a href="#" aria-label="Learn about Intellectual Property">Intellectual Property</a>
+            </div>
+            <div class="footer-section">
+                <h4>Development</h4>
+                <a href="#roadmap" aria-label="View Development Timeline">Project Timeline</a>
+                <a href="#funding" aria-label="View Funding Status">Funding Status</a>
+                <a href="#join-team" aria-label="Join Development Team">Join Our Team</a>
+                <a href="https://github.com/your-repo" aria-label="View GitHub Repository">GitHub</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Signup Modal -->
+    <div class="modal" id="signupModal" aria-hidden="true">
+        <div class="modal-content">
+            <button class="close-modal" aria-label="Close Signup Modal">&times;</button>
+            <form class="modal-form" id="signupForm">
+                <div class="form-header">
+                    <img src="https://lh3.googleusercontent.com/d/1JsyqGU6XM_FxPBN35Jbk1tr31Lmhfy6b" 
+                         alt="NexusStream Logo" 
+                         style="width: 80px; height: 80px; object-fit: contain;">
+                    <h1>Join Nexus AI</h1>
+                    <p>Experience the future of AI-powered streaming</p>
+                </div>
+
+                <div class="form-group">
+                    <label for="signupUsername">Username</label>
+                    <input type="text" id="signupUsername" required>
+                    <i class="fas fa-user"></i>
+                </div>
+
+                <div class="form-group">
+                    <label for="signupEmail">Email</label>
+                    <input type="email" id="signupEmail" required>
+                    <i class="fas fa-envelope"></i>
+                </div>
+
+                <div class="form-group">
+                    <label for="signupPassword">Password</label>
+                    <input type="password" id="signupPassword" required>
+                    <i class="fas fa-lock"></i>
+                    <div class="password-requirements">
+                        Password must be at least 8 characters long and include numbers and symbols
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="signupConfirmPassword">Confirm Password</label>
+                    <input type="password" id="signupConfirmPassword" required>
+                    <i class="fas fa-lock"></i>
+                </div>
+
+                <button type="submit" class="modal-button">
+                    Create Account
+                </button>
+
+                <div class="social-signup">
+                    <p>Or sign up with</p>
+                    <div class="social-buttons">
+                        <button type="button" class="social-button">
+                            <i class="fab fa-google"></i>
+                            Google
+                        </button>
+                    </div>
+                </div>
+
+                <div class="login-link">
+                    Already have an account? <a href="#" id="openLoginModalFromSignup">Login</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div class="modal" id="loginModal" aria-hidden="true">
+        <div class="modal-content">
+            <button class="close-modal" aria-label="Close Login Modal">&times;</button>
+            <form class="modal-form" id="loginForm">
+                <div class="form-header">
+                    <img src="https://lh3.googleusercontent.com/d/1JsyqGU6XM_FxPBN35Jbk1tr31Lmhfy6b" 
+                         alt="NexusStream Logo" 
+                         style="width: 80px; height: 80px; object-fit: contain;">
+                    <h1>Welcome Back</h1>
+                    <p>Continue your AI-powered streaming experience</p>
+                </div>
+
+                <div class="form-group">
+                    <label for="loginEmail">Email</label>
+                    <input type="email" id="loginEmail" required>
+                    <i class="fas fa-envelope"></i>
+                </div>
+
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" required>
+                    <i class="fas fa-lock"></i>
+                </div>
+
+                <div class="form-options">
+                    <label class="remember-me">
+                        <input type="checkbox" id="remember">
+                        Remember me
+                    </label>
+                    <a href="#" class="forgot-password">Forgot Password?</a>
+                </div>
+
+                <button type="submit" class="modal-button">
+                    Login
+                </button>
+
+                <div class="social-login">
+                    <p>Or login with</p>
+                    <div class="social-buttons">
+                        <button type="button" class="social-button">
+                            <i class="fab fa-google"></i>
+                            Google
+                        </button>
+                    </div>
+                </div>
+
+                <div class="signup-link">
+                    Don't have an account? <a href="#" id="openSignupModalFromLogin">Sign Up</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Overlay -->
+    <div class="modal-overlay" id="modalOverlay" style="display: none;"></div>
+
+    <!-- Loading Indicator Example -->
+    <div class="loader" id="loader" aria-label="Loading"></div>
+
+    <!-- Inlined JavaScript -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Side Navigation Elements
+            const hamburgerMenu = document.querySelector('.hamburger-menu');
+            const sideNav = document.querySelector('.side-nav');
+            const overlay = document.querySelector('.side-nav-overlay');
+            const mainContent = document.querySelector('.adaptive-layout');
+
+            // Modals Elements
+            const signupModal = document.getElementById('signupModal');
+            const loginModal = document.getElementById('loginModal');
+            const modalOverlay = document.getElementById('modalOverlay');
+
+            // Buttons to open modals
+            const openSignupBtn = document.getElementById('openSignupModal');
+            const openLoginBtn = document.getElementById('openLoginModal');
+
+            // Links inside modals to switch between them
+            const openLoginFromSignup = document.getElementById('openLoginModalFromSignup');
+            const openSignupFromLogin = document.getElementById('openSignupModalFromLogin');
+
+            // Close buttons inside modals
+            const closeModals = document.querySelectorAll('.close-modal');
+
+            // Function to toggle side navigation
+            function toggleNav() {
+                sideNav.classList.toggle('active');
+                overlay.classList.toggle('active');
+                if (sideNav.classList.contains('active')) {
+                    document.body.style.overflow = 'hidden';
+                } else {
+                    document.body.style.overflow = '';
+                }
+            }
+
+            // Event Listeners for side navigation
+            hamburgerMenu.addEventListener('click', toggleNav);
+            overlay.addEventListener('click', toggleNav);
+
+            // Function to open a modal
+            function openModal(modal) {
+                modal.style.display = 'block';
+                modalOverlay.style.display = 'block';
+                document.body.style.overflow = 'hidden';
+            }
+
+            // Function to close a modal
+            function closeModal(modal) {
+                modal.style.display = 'none';
+                modalOverlay.style.display = 'none';
+                document.body.style.overflow = '';
+            }
+
+            // Event Listeners to open modals
+            openSignupBtn.addEventListener('click', () => openModal(signupModal));
+            openLoginBtn.addEventListener('click', () => openModal(loginModal));
+
+            // Event Listeners to switch between modals
+            openLoginFromSignup.addEventListener('click', () => {
+                closeModal(signupModal);
+                openModal(loginModal);
+            });
+
+            openSignupFromLogin.addEventListener('click', () => {
+                closeModal(loginModal);
+                openModal(signupModal);
+            });
+
+            // Event Listeners to close modals
+            closeModals.forEach(button => {
+                button.addEventListener('click', () => {
+                    if (button.closest('.modal') === signupModal) {
+                        closeModal(signupModal);
+                    } else if (button.closest('.modal') === loginModal) {
+                        closeModal(loginModal);
+                    }
+                });
+            });
+
+            // Close modals when clicking outside the modal content
+            window.addEventListener('click', function(event) {
+                if (event.target === signupModal) {
+                    closeModal(signupModal);
+                }
+                if (event.target === loginModal) {
+                    closeModal(loginModal);
+                }
+            });
+
+            // Close modals on Escape key press
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    if (signupModal.style.display === 'block') {
+                        closeModal(signupModal);
+                    }
+                    if (loginModal.style.display === 'block') {
+                        closeModal(loginModal);
+                    }
+                }
+            });
+
+            // Function to handle form submissions
+            // Signup Form Submission
+            document.getElementById('signupForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Basic validation
+                const password = document.getElementById('signupPassword').value;
+                const confirmPassword = document.getElementById('signupConfirmPassword').value;
+                
+                if (password !== confirmPassword) {
+                    alert('Passwords do not match!');
+                    return;
+                }
+
+                // Password strength validation
+                const passwordRegex = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/;
+                if (!passwordRegex.test(password)) {
+                    alert('Password must be at least 8 characters long and include numbers and symbols');
+                    return;
+                }
+
+                // Here you would typically send the form data to your server
+                console.log('Signup form submitted successfully');
+                // Add your API call here
+                alert('Account created successfully!');
+                // Redirect to login modal after successful signup
+                closeModal(signupModal);
+                openModal(loginModal);
+            });
+
+            // Login Form Submission
+            document.getElementById('loginForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Get form values
+                const email = document.getElementById('loginEmail').value;
+                const password = document.getElementById('loginPassword').value;
+                const remember = document.getElementById('remember').checked;
+
+                // Here you would typically send the login request to your server
+                console.log('Login attempt:', { email, remember });
+
+                // Simulate successful login
+                alert('Logged in successfully!');
+                closeModal(loginModal);
+                window.location.href = '#homeSection'; // Scroll to home section or adjust as needed
+            });
+
+            // Optional: Handle social login buttons
+            document.querySelectorAll('.social-button').forEach(function(button) {
+                button.addEventListener('click', function() {
+                    // Implement social login functionality here
+                    alert('Social login is not implemented yet.');
+                });
+            });
+
+            // Additional JavaScript for homepage functionalities can be added here
+        });
+    </script>
+
+    <script>
+        const video = document.querySelector('.stream-video');
+        const thumbnail = document.querySelector('.stream-thumbnail');
+
+        // Simulate stream loading delay
+        setTimeout(() => {
+            video.play()
+                .then(() => {
+                    video.classList.add('playing');
+                    thumbnail.style.opacity = 0;
+                })
+                .catch(err => console.log('Video autoplay failed:', err));
+        }, 2000);
+
+        // Loop video for demo purposes
+        video.addEventListener('ended', function() {
+            video.currentTime = 0;
+            video.play();
+        });
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.content-card');
+            
+            cards.forEach(card => {
+                const video = card.querySelector('.stream-video');
+                const thumbnail = card.querySelector('.stream-thumbnail');
+                
+                card.addEventListener('mouseenter', () => {
+                    video.play().catch(err => console.log('Video preview failed:', err));
+                });
+                
+                card.addEventListener('mouseleave', () => {
+                    video.pause();
+                    video.currentTime = 0;
+                });
+            });
+        });
+    </script>
+</body>
+</html>
