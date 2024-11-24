@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NexusStream - AI-Powered Live Streaming</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+</head>
+<body class="dark-mode">
+    <!-- Fixed Header Navigation -->
+    <header>
+        <nav class="smart-navbar">
+            <!-- Left side -->
+            <div class="nav-left">
+                <button class="hamburger-menu" aria-label="Toggle Navigation">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+
+            <!-- Center -->
+            <div class="nav-logo">
+                <a href="projections.html" class="nav-roadmap">
+                    <i class="fas fa-road"></i>
+                    Roadmap <span class="phase-badge">Phase 1</span>
+                </a>
+                <div class="smart-search">
+                    <input type="text" placeholder="Search..." aria-label="Search">
+                    <button class="voice-search" aria-label="Voice Search">
+                        <i class="fas fa-microphone"></i>
+                    </button>
+                    <button class="ai-search" aria-label="AI Search">
+                        <i class="fas fa-robot"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Right side -->
+            <div class="nav-right">
+                <div class="nav-auth">
+                    <button onclick="window.location.href='login.html'" class="login-btn">Login</button>
+                    <button onclick="window.location.href='signup.html'" class="signup-btn">Sign Up</button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Side Navigation -->
+        <div class="side-nav" id="sideNav">
+            <div class="side-nav-header">
+                <a href="index.html">
+                    <img src="logo.png" alt="NexusStream Logo" class="logo">
+                    <span class="ai-badge">AI-Powered</span>
+                </a>
+                <h3>Menu</h3>
+            </div>
+            <div class="nav-links">
+                <a href="index.html" class="active">
+                    <i class="fas fa-home"></i>
+                    Home
+                </a>
+                <a href="community.html">
+                    <i class="fas fa-users"></i>
+                    Community
+                </a>
+                <a href="following.html">
+                    <i class="fas fa-heart"></i>
+                    Following
+                </a>
+                <a href="events.html">
+                    <i class="fas fa-calendar"></i>
+                    Events
+                </a>
+                <a href="projections.html">
+                    <i class="fas fa-road"></i>
+                    Roadmap <span class="phase-badge">Phase 1</span>
+                </a>
+            </div>
+        </div>
+        <div class="side-nav-overlay" id="sideNavOverlay"></div>
+    </header>
+
+    <main class="adaptive-layout">
+        <!-- Main Content Section -->
+        <section class="smart-content-grid">
+            <div class="primary-stream">
+                <div class="adaptive-player">
+                    <video controls class="smart-video" poster="thumbnail.jpg" preload="metadata" loading="lazy">
+                        <source src="stream.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                    <div class="ai-enhancements">
+                        <button class="ai-translate" aria-label="Auto-Translate">Auto-Translate</button>
+                        <button class="ai-transcript" aria-label="Live Transcript">Live Transcript</button>
+                        <button class="ai-highlights" aria-label="Smart Highlights">Smart Highlights</button>
+                        <button class="report-issue" aria-label="Report Issue">Report Issue</button>
+                    </div>
+                </div>
+                <div class="stream-analytics">
+                    <h4>Engagement Analytics</h4>
+                    <div class="engagement-metrics">
+                        <span class="sentiment-score" aria-label="Positive Engagement Score">Positive Engagement: 94%</span>
+                        <span class="peak-viewers" aria-label="Peak Viewers Count">Peak: 1.2K viewers</span>
+                        <span class="average-watch-time" aria-label="Average Watch Time">Average Watch Time: 10m 30s</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AI-Curated Recommendations -->
+            <section class="smart-recommendations">
+                <h3>Personalized For You <i class="fas fa-brain ai-icon" aria-hidden="true"></i></h3>
+                <div class="dynamic-grid">
+                    <div class="content-card" data-engagement="98">
+                        <div class="thumbnail-container">
+                            <img src="stream1.jpg" alt="Exciting Drama Stream Preview" loading="lazy">
+                            <span class="ai-match">98% Match</span>
+                        </div>
+                        <div class="content-details">
+                            <h4 class="content-title">Exciting Drama Stream</h4>
+                            <p>Join the thrilling drama action live!</p>
+                        </div>
+                    </div>
+                    <!-- Additional Content Cards Can Be Added Here -->
+                </div>
+            </section>
+        </section>
+
+        <!-- AI Features Section -->
+        <section class="ai-hub">
+            <h3>AI-Powered Experience</h3>
+            <div class="ai-features-grid">
+                <div class="ai-feature">
+                    <i class="fas fa-brain"></i>
+                    <h4>Smart Content Discovery</h4>
+                    <p>Personalized recommendations using neural networks to enhance viewer experience.</p>
+                </div>
+                <div class="ai-feature">
+                    <i class="fas fa-language"></i>
+                    <h4>Universal Translation</h4>
+                    <p>Real-time translation in 95+ languages for global reach.</p>
+                </div>
+                <div class="ai-feature">
+                    <i class="fas fa-shield-alt"></i>
+                    <h4>Data Privacy Assurance</h4>
+                    <p>Your data is safeguarded with end-to-end encryption and robust security measures.</p>
+                </div>
+                <div class="ai-feature">
+                    <i class="fas fa-volume-up"></i>
+                    <h4>Customizable Audio Feedback</h4>
+                    <p>Choose from an extensive library of sound feedback or upload your own.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Revenue Optimization Tools Section -->
+        <section class="revenue-tools">
+            <h3>Optimize Your Experience</h3>
+            <div class="donation-optimizer">
+                <button class="smart-pricing" aria-label="Dynamic Pricing Optimization">Dynamic Pricing</button>
+                <button class="engagement-rewards" aria-label="Engagement Rewards">Smart Rewards</button>
+                <span class="revenue-insights" aria-label="Revenue Insights">Maximize Your Revenue Potential!</span>
+            </div>
+            <div class="ads-management">
+                <h4>Ad Placement Optimization</h4>
+                <button class="ad-analysis" aria-label="AI Ad Analysis">AI Ad Analysis</button>
+                <button class="targeting-tool" aria-label="Smart Targeting Tool">Smart Targeting</button>
+                <span class="ad-performance" aria-label="Ad Performance Status">Ad Performance: Excellent</span>
+            </div>
+        </section>
+    </main>
+
+    <!-- Floating Action Menu for Quick Access -->
+    <div class="floating-menu">
+        <button class="floating-action-button" id="aiAssistant" title="AI Assistant" aria-label="AI Assistant">
+            <i class="fas fa-robot"></i>
+        </button>
+        <button class="floating-action-button" id="streamHealth" title="View Stream Health" aria-label="View Stream Health">
+            <i class="fas fa-chart-line"></i>
+        </button>
+    </div>
+
+    <!-- AI Chat Interface -->
+    <div class="ai-chat-interface" id="aiChat" aria-hidden="true">
+        <div class="chat-header">
+            AI Stream Assistant
+            <button class="close-chat" aria-label="Close Chat">&times;</button>
+        </div>
+        <div class="chat-messages" id="chatMessages" aria-live="polite">
+            <!-- Dynamic messages will be added here -->
+        </div>
+        <div class="chat-input">
+            <input type="text" placeholder="Ask your AI assistant..." aria-label="Message input" required>
+            <button aria-label="Send Message" type="button">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Smart Notification Center -->
+    <aside class="smart-notifications">
+        <div class="notification-header">
+            <h4>Notifications</h4>
+            <button class="clear-notifications" aria-label="Clear All Notifications">&times;</button>
+        </div>
+        <div class="notification-list">
+            <p>No new notifications.</p>
+        </div>
+    </aside>
+
+    <!-- Smart Footer -->
+    <footer class="ai-footer">
+        <div class="footer-intelligence">
+            <div class="platform-stats">
+                <span class="active-streams" aria-label="Live Streams Count">Live Streams: 1.2K</span>
+                <span class="platform-health" aria-label="Platform Operational Status">Platform Status: Optimal</span>
+                <span class="ai-processing" aria-label="AI Processing Status">AI Processing: Active</span>
+            </div>
+            <div class="footer-settings">
+                <button class="settings-toggle" aria-label="Settings Toggle">Settings <i class="fas fa-cog"></i></button>
+            </div>
+        </div>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>About Us</h4>
+                <a href="#" aria-label="Learn more about us">About</a>
+                <a href="#" aria-label="Read our blog">Blog</a>
+                <a href="#" aria-label="Join our team">Careers</a>
+                <a href="#" aria-label="Press inquiries">Press</a>
+                <a href="#" aria-label="Contact us for more information">Contact Us</a>
+            </div>
+            <div class="footer-section">
+                <h4>Support</h4>
+                <a href="#" aria-label="Visit Help Center for assistance">Help Center</a>
+                <a href="#" aria-label="Visit Safety Center for safety tips">Safety Center</a>
+                <a href="#" aria-label="Read our community guidelines">Community Guidelines</a>
+                <a href="#" aria-label="Report a problem">Report a Problem</a>
+            </div>
+            <div class="footer-section">
+                <h4>Legal</h4>
+                <a href="#" aria-label="Read our Terms of Service">Terms of Service</a>
+                <a href="#" aria-label="Review Privacy Policy">Privacy Policy</a>
+                <a href="#" aria-label="View Cookie Policy">Cookie Policy</a>
+                <a href="#" aria-label="Learn about Intellectual Property">Intellectual Property</a>
+            </div>
+            <div class="footer-section">
+                <h4>Development</h4>
+                <a href="projections.html" aria-label="View Development Timeline">Project Timeline</a>
+                <a href="projections.html#funding" aria-label="View Funding Status">Funding Status</a>
+                <a href="projections.html#join-team" aria-label="Join Development Team">Join Our Team</a>
+                <a href="https://github.com/your-repo" aria-label="View GitHub Repository">GitHub</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Modal Example -->
+    <div class="modal" id="exampleModal" aria-hidden="true">
+        <div class="modal-content">
+            <span class="close-modal" aria-label="Close Modal">&times;</span>
+            <h2>Modal Title</h2>
+            <p>Modal content goes here.</p>
+        </div>
+    </div>
+
+    <!-- Loading Indicator Example -->
+    <div class="loader" aria-label="Loading"></div>
+
+    <!-- AI System Scripts -->
+    <script src="ai-core.js" defer></script>
+    <script src="scripts.js" defer></script>
+    <script src="auth.js"></script>
+</body>
+</html>
