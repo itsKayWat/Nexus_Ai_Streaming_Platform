@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - Nexus AI Streaming Platform</title>
+    <link rel="stylesheet" href="signup.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="smart-navbar">
+        <div class="nav-logo">
+            <a href="index.html">
+                <img src="logo.png" alt="Nexus AI Logo" class="logo">
+                <span class="ai-badge">AI-Powered</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Signup Container -->
+    <div class="signup-container">
+        <form class="signup-form" id="signupForm">
+            <div class="form-header">
+                <img src="logo.png" alt="Nexus AI Logo">
+                <h1>Join Nexus AI</h1>
+                <p>Experience the future of AI-powered streaming</p>
+            </div>
+
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" required>
+                <i class="fas fa-user"></i>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" required>
+                <i class="fas fa-envelope"></i>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" required>
+                <i class="fas fa-lock"></i>
+                <div class="password-requirements">
+                    Password must be at least 8 characters long and include numbers and symbols
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="confirmPassword">Confirm Password</label>
+                <input type="password" id="confirmPassword" required>
+                <i class="fas fa-lock"></i>
+            </div>
+
+            <button type="submit" class="signup-button">
+                Create Account
+            </button>
+
+            <div class="social-signup">
+                <p>Or sign up with</p>
+                <div class="social-buttons">
+                    <button type="button" class="social-button">
+                        <i class="fab fa-google"></i>
+                        Google
+                    </button>
+                </div>
+            </div>
+
+            <div class="login-link">
+                Already have an account? <a href="login.html">Login</a>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('signupForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Basic validation
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            if (password !== confirmPassword) {
+                alert('Passwords do not match!');
+                return;
+            }
+
+            // Password strength validation
+            const passwordRegex = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/;
+            if (!passwordRegex.test(password)) {
+                alert('Password must be at least 8 characters long and include numbers and symbols');
+                return;
+            }
+
+            // Here you would typically send the form data to your server
+            console.log('Form submitted successfully');
+            // Add your API call here
+        });
+
+        document.querySelector('.signup-btn').addEventListener('click', function() {
+            window.location.href = 'signup.html';
+        });
+    </script>
+    <script src="auth.js"></script>
+</body>
+</html> 
