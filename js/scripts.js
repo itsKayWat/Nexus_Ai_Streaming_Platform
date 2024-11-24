@@ -83,37 +83,20 @@ document.addEventListener('DOMContentLoaded', function() {
     const closeNav = document.querySelector('.close-nav');
     const overlay = document.querySelector('.side-nav-overlay');
 
-    // Function to open navigation
-    function openNav() {
-        sideNav.classList.add('active');
-        overlay.classList.add('active');
-        document.body.style.overflow = 'hidden'; // Prevent scrolling when nav is open
+    function toggleNav() {
+        sideNav?.classList.toggle('active');
+        overlay?.classList.toggle('active');
+        document.body.style.overflow = sideNav?.classList.contains('active') ? 'hidden' : '';
     }
 
-    // Function to close navigation
-    function closeNav() {
-        sideNav.classList.remove('active');
-        overlay.classList.remove('active');
-        document.body.style.overflow = ''; // Restore scrolling
-    }
-
-    // Event listeners
-    if (hamburgerMenu) {
-        hamburgerMenu.addEventListener('click', openNav);
-    }
-
-    if (closeNav) {
-        closeNav.addEventListener('click', closeNav);
-    }
-
-    if (overlay) {
-        overlay.addEventListener('click', closeNav);
-    }
+    // Event Listeners
+    hamburgerMenu?.addEventListener('click', toggleNav);
+    overlay?.addEventListener('click', toggleNav);
 
     // Close navigation on escape key
     document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') {
-            closeNav();
+        if (e.key === 'Escape' && sideNav?.classList.contains('active')) {
+            toggleNav();
         }
     });
 
