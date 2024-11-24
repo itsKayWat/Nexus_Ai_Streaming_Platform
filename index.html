@@ -13,47 +13,28 @@
     <!-- Fixed Header Navigation -->
     <header>
         <nav class="smart-navbar">
-            <!-- Left side -->
             <div class="nav-left">
-                <button class="hamburger-menu" aria-label="Toggle Navigation">
+                <button class="hamburger-menu">
                     <i class="fas fa-bars"></i>
                 </button>
-            </div>
-
-            <!-- Center -->
-            <div class="nav-logo">
-                <a href="projections.html" class="nav-roadmap">
-                    <i class="fas fa-road"></i>
-                    Roadmap <span class="phase-badge">Phase 1</span>
+                <a href="index.html" class="nav-logo">
+                    <img src="NexusStream_Logo_AI-Powered.png" alt="NexusStream Logo" class="logo">
                 </a>
-                <div class="smart-search">
-                    <input type="text" placeholder="Search..." aria-label="Search">
-                    <button class="voice-search" aria-label="Voice Search">
-                        <i class="fas fa-microphone"></i>
-                    </button>
-                    <button class="ai-search" aria-label="AI Search">
-                        <i class="fas fa-robot"></i>
-                    </button>
-                </div>
             </div>
-
-            <!-- Right side -->
             <div class="nav-right">
+                <div class="search-box">
+                    <input type="text" placeholder="Search...">
+                    <i class="fas fa-microphone"></i>
+                </div>
                 <div class="nav-auth">
-                    <button onclick="window.location.href='login.html'" class="login-btn">Login</button>
-                    <button onclick="window.location.href='signup.html'" class="signup-btn">Sign Up</button>
+                    <button class="login-btn">Login</button>
+                    <button class="signup-btn">Sign Up</button>
                 </div>
             </div>
         </nav>
 
         <!-- Side Navigation -->
-        <div class="side-nav" id="sideNav">
-            <div class="side-nav-header">
-                <a href="index.html">
-                    <img src="logo.png" alt="NexusStream Logo" class="logo">
-                    <span class="ai-badge">AI-Powered</span>
-                </a>
-            </div>
+        <div class="side-nav">
             <div class="nav-links">
                 <a href="index.html" class="active">
                     <i class="fas fa-home"></i>
@@ -72,12 +53,12 @@
                     Events
                 </a>
                 <a href="projections.html">
-                    <i class="fas fa-road"></i>
-                    Roadmap <span class="phase-badge">Phase 1</span>
+                    <i class="fas fa-project-diagram"></i>
+                    Roadmap Phase 1
                 </a>
             </div>
         </div>
-        <div class="side-nav-overlay" id="sideNavOverlay"></div>
+        <div class="side-nav-overlay"></div>
     </header>
 
     <main class="adaptive-layout">
